@@ -1,0 +1,7 @@
+django
+django-cors-headers
+django-filter
+djangorestframework
+psycopg2
+python-dotenv
+requests

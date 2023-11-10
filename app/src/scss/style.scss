@@ -1,0 +1,10 @@
+@import "~bootstrap/scss/bootstrap";
+
+* {
+    border-radius: 0 !important;
+    // border: 0 !important;
+}
+
+.form-control:focus {
+    box-shadow: none !important;
+}
