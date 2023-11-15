@@ -24,7 +24,6 @@ const checkHoldTime = () => {
   }
 }
 
-
 const hideDice = (event: MouseEvent) => {
   event.preventDefault()
   showDice.value = false
@@ -40,7 +39,7 @@ const diceOptions = [
 ]
 
 const getUsername = async () => {
-  const username = await authStore.getUsername()
+  const username = await authStore.getUser()
   return username
 }
 
@@ -69,18 +68,20 @@ const props = defineProps<{ webhook: string }>()
 const DISCORD_WEBHOOK_URL = props.webhook
 
 const sendRollResultsToDiscord = async () => {
-  const discordId = localStorage.getItem('discordId')
+  const discord_id = localStorage.getItem('discord_id')
 
-  if (!discordId) {
+  if (!discord_id) {
     console.error('No Discord ID found in local storage.')
     return
   }
 
-  const rollResults = results.value.map(roll => `${roll.dice}(${roll.result})`).join(', ')
+  const rollResults = results.value
+    .map((roll) => `${roll.dice}(${roll.result})`)
+    .join(', ')
   const rollTotal = result.value
 
   const user = await getUsername()
-  const username = user ? (user) : 'Unknown'
+  const username = user ? user : 'Unknown'
 
   const payload = {
     content: `Player ${username} rolled ${rollResults} for a total of ${rollTotal}.`
@@ -121,7 +122,10 @@ const rollDice = () => {
 
   for (const [diceValue, rolls] of Object.entries(diceResults)) {
     if (rolls.length > 0) {
-      results.value.push({ dice: `${rolls.length}d${diceValue}`, result: rolls.join(', ') })
+      results.value.push({
+        dice: `${rolls.length}d${diceValue}`,
+        result: rolls.join(', ')
+      })
     }
   }
 
@@ -136,30 +140,58 @@ const rollDice = () => {
     showDice.value = false
   }
 }
-
 </script>
 
 <template>
   <div class="dice-roller position-fixed bottom-0 start-0 w-100 p-2">
     <div class="row" v-if="showDice">
       <div class="col-md-1">
-        <div class="position-relative mb-1" role="button" v-for="dice in diceOptions" :key="dice.value">
-          <img class="img img-fluid bg-dark rounded-circle" :src="dice.icon" @mousedown="startTimer" @mouseup="checkHoldTime" @click="selectDice(dice)" @contextmenu="deselectDice(dice, $event)" style="width: 4em; height: 4em" />
-          <p class="position-absolute top-0 text-danger fs-4 badge">{{selectedDice[dice.value] || 0}}</p>
+        <div
+          class="position-relative mb-1"
+          role="button"
+          v-for="dice in diceOptions"
+          :key="dice.value"
+        >
+          <img
+            class="img img-fluid bg-dark rounded-circle"
+            :src="dice.icon"
+            @mousedown="startTimer"
+            @mouseup="checkHoldTime"
+            @click="selectDice(dice)"
+            @contextmenu="deselectDice(dice, $event)"
+            style="width: 4em; height: 4em"
+          />
+          <p class="position-absolute top-0 text-danger fs-4 badge">
+            {{ selectedDice[dice.value] || 0 }}
+          </p>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-1">
         <div class="d-grid gap-2">
-          <button class="btn btn-dark rounded-circle bg-danger border-0" @contextmenu.prevent="hideDice" @click="rollDice" style="width: 4em; height: 4em;">Roll</button>
+          <button
+            class="btn btn-dark rounded-circle bg-danger border-0"
+            @contextmenu.prevent="hideDice"
+            @click="rollDice"
+            style="width: 4em; height: 4em"
+          >
+            Roll
+          </button>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-2">
-        <p class="h6 mb-0" v-if="results.length">Results: <span class="fs-5">{{ results.map(roll => `${roll.dice}(${roll.result})`).join(', ') }}</span></p>
-        <p class="h6 mt-0" v-if="result !== null && result !== 0">Total: <span class="fs-5">{{ result }}</span></p>
+        <p class="h6 mb-0" v-if="results.length">
+          Results:
+          <span class="fs-5">{{
+            results.map((roll) => `${roll.dice}(${roll.result})`).join(', ')
+          }}</span>
+        </p>
+        <p class="h6 mt-0" v-if="result !== null && result !== 0">
+          Total: <span class="fs-5">{{ result }}</span>
+        </p>
       </div>
     </div>
   </div>

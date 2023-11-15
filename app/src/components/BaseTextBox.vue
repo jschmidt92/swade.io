@@ -36,7 +36,16 @@ const emit = defineEmits<{
 
 <template>
   <div class="form-floating small">
-    <textarea class="form-control rounded-0" :type="type" :placeholder="label" :rows="rows" :cols="cols" :value="modelValue" @input="updateValue" v-bind="$attrs"></textarea>
+    <textarea
+      class="form-control rounded-0"
+      :type="type"
+      :placeholder="label"
+      :rows="rows"
+      :cols="cols"
+      :value="modelValue"
+      @input="updateValue"
+      v-bind="$attrs"
+    ></textarea>
     <label>{{ label }}</label>
   </div>
 </template>

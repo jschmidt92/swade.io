@@ -20,6 +20,7 @@ export interface CharacterCreate {
 
 export interface CharactersList {
   id: number
+  discordID: number
   name: string
   race: string
   gender: string
@@ -28,6 +29,7 @@ export interface CharactersList {
 
 export interface CharacterUpdate {
   id?: number
+  discordID?: number
   name?: string
   race?: string
   gender?: string
@@ -49,6 +51,8 @@ export interface CharacterUpdate {
 }
 
 export interface CharacterView {
+  id: number
+  discordID: number
   name: string
   race: string
   gender: string
@@ -105,24 +109,24 @@ export interface NestedGear {
     wt: number
     cost: number
     notes: string
-  };
-  quantity: number;
+  }
+  quantity: number
 }
 
 export interface NestedWeapon {
   weapon: {
-    id: number;
-    name: string;
-    range: string;
-    damage: string;
-    rof: number;
-    shots: number;
-    min_str: string;
-    wt: number;
-    cost: number;
-    notes: string;
-  };
-  quantity: number;
+    id: number
+    name: string
+    range: string
+    damage: string
+    rof: number
+    shots: number
+    min_str: string
+    wt: number
+    cost: number
+    notes: string
+  }
+  quantity: number
 }
 
 export interface Weapon {
@@ -138,8 +142,8 @@ export interface Weapon {
   notes: string
 }
 
-const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
-// const BASE_URL = 'http://localhost:8000'
+// const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
+const BASE_URL = 'http://135.135.196.140:8000'
 
 export const useCharacterStore = defineStore('character', {
   state: () => ({
@@ -174,6 +178,7 @@ export const useCharacterStore = defineStore('character', {
           throw Error('No data available')
         }
         this.characters = await data.json()
+        return this.characters
       } catch (err: any) {
         this.error = err.message
         console.log(this.error)
@@ -193,18 +198,23 @@ export const useCharacterStore = defineStore('character', {
     },
     async updateCharacter(character: CharacterUpdate) {
       try {
-        const response = await fetch(`${BASE_URL}/characters/${character.id}/`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(character)
-        })
+        const response = await fetch(
+          `${BASE_URL}/characters/${character.id}/`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(character)
+          }
+        )
         if (!response.ok) {
           throw Error('Could not update character')
         }
         const updatedCharacter = await response.json()
-        const index = this.characters.findIndex(c => c.id === updatedCharacter.id)
+        const index = this.characters.findIndex(
+          (c) => c.id === updatedCharacter.id
+        )
         if (index !== -1) {
           this.characters.splice(index, 1, updatedCharacter)
         }

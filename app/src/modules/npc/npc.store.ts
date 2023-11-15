@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export interface MonsterCreate {
+export interface NpcCreate {
   [key: string]: any
   name: string
   race: string
@@ -22,7 +22,7 @@ export interface MonsterCreate {
   money: number
 }
 
-export interface MonstersList {
+export interface NpcsList {
   id: number
   name: string
   race: string
@@ -30,7 +30,7 @@ export interface MonstersList {
   damage: string | Record<string, any>
 }
 
-export interface MonsterUpdate {
+export interface NpcUpdate {
   id?: number
   name?: string
   race?: string
@@ -52,7 +52,7 @@ export interface MonsterUpdate {
   money?: number
 }
 
-export interface MonsterView {
+export interface NpcView {
   name: string
   race: string
   gender: string
@@ -109,24 +109,24 @@ export interface NestedGear {
     wt: number
     cost: number
     notes: string
-  };
-  quantity: number;
+  }
+  quantity: number
 }
 
 export interface NestedWeapon {
   weapon: {
-    id: number;
-    name: string;
-    range: string;
-    damage: string;
-    rof: number;
-    shots: number;
-    min_str: string;
-    wt: number;
-    cost: number;
-    notes: string;
-  };
-  quantity: number;
+    id: number
+    name: string
+    range: string
+    damage: string
+    rof: number
+    shots: number
+    min_str: string
+    wt: number
+    cost: number
+    notes: string
+  }
+  quantity: number
 }
 
 export interface Weapon {
@@ -142,75 +142,75 @@ export interface Weapon {
   notes: string
 }
 
-const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
-// const BASE_URL = 'http://swadebot.api:8000/api'
+// const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
+const BASE_URL = 'http://135.135.196.140:8000'
 
-export const useMonsterStore = defineStore('monster', {
+export const useNpcStore = defineStore('npc', {
   state: () => ({
-    monster: null as MonsterView | null,
-    monsters: [] as MonstersList[],
+    npc: null as NpcView | null,
+    npcs: [] as NpcsList[],
     error: null as string | null
   }),
   actions: {
-    async createMonster(monster: MonsterCreate) {
+    async createNpc(npc: NpcCreate) {
       try {
-        const response = await fetch(`${BASE_URL}/monsters`, {
+        const response = await fetch(`${BASE_URL}/npcs/new/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(monster)
+          body: JSON.stringify(npc)
         })
         if (!response.ok) {
-          throw Error('Could not create monster')
+          throw Error('Could not create npc')
         }
-        const newMonster = await response.json()
-        this.monsters.push(newMonster)
+        const newNpc = await response.json()
+        this.npcs.push(newNpc)
       } catch (err: any) {
         this.error = err.message
         console.log(this.error)
       }
     },
-    async getMonsters() {
+    async getNpcs() {
       try {
-        let data = await fetch(`${BASE_URL}/monsters`)
+        let data = await fetch(`${BASE_URL}/npcs/`)
         if (!data.ok) {
           throw Error('No data available')
         }
-        this.monsters = await data.json()
+        this.npcs = await data.json()
       } catch (err: any) {
         this.error = err.message
         console.log(this.error)
       }
     },
-    async getMonster(id: any) {
+    async getNpc(id: any) {
       try {
-        let data = await fetch(`${BASE_URL}/monsters/` + id)
+        let data = await fetch(`${BASE_URL}/npcs/${id}/`)
         if (!data.ok) {
-          throw Error('Monster does not exist')
+          throw Error('Npc does not exist')
         }
-        this.monster = await data.json()
+        this.npc = await data.json()
       } catch (err: any) {
         this.error = err.message
         console.log(this.error)
       }
     },
-    async updateMonster(monster: MonsterUpdate) {
+    async updateNpc(npc: NpcUpdate) {
       try {
-        const response = await fetch(`${BASE_URL}/monsters/${monster.id}`, {
+        const response = await fetch(`${BASE_URL}/npcs/${npc.id}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(monster)
+          body: JSON.stringify(npc)
         })
         if (!response.ok) {
-          throw Error('Could not update monster')
+          throw Error('Could not update npc')
         }
-        const updatedMonster = await response.json()
-        const index = this.monsters.findIndex(c => c.id === updatedMonster.id)
+        const updatedNpc = await response.json()
+        const index = this.npcs.findIndex((c) => c.id === updatedNpc.id)
         if (index !== -1) {
-          this.monsters.splice(index, 1, updatedMonster)
+          this.npcs.splice(index, 1, updatedNpc)
         }
       } catch (err: any) {
         this.error = err.message

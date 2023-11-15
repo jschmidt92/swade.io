@@ -63,6 +63,7 @@ class NPCSerializer(ModelSerializer):
             "name",
             "race",
             "gender",
+            "faction",
             "charisma",
             "pace",
             "parry",

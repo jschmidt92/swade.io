@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 
-const BASE_URL = 'http://localhost:8000'
+// const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
+const BASE_URL = 'http://135.135.196.140:8000'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,
     token: '',
-    discordID: '',
+    discord_id: ''
   }),
   getters: {
     hasToken: (state) => {
@@ -16,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async loginWithDiscord() {
       try {
-        window.location.href = "http://localhost:8000/discord/oauth2/login/"
+        window.location.href = `${BASE_URL}/discord/oauth2/login/`
       } catch (error) {
         console.error(error)
       }
@@ -24,7 +25,7 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.setAuthenticated(false)
       localStorage.removeItem('token')
-      localStorage.removeItem('discordID')
+      localStorage.removeItem('discord_id')
       window.location.href = '/'
     },
     setAuthenticated(authenticated: boolean) {
@@ -35,42 +36,41 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = true
       localStorage.setItem('token', token)
     },
-    setDiscordId(discordID: string) {
-      this.discordID = discordID
-      localStorage.setItem('discordID', discordID)
+    setDiscordId(discord_id: string) {
+      this.discord_id = discord_id
+      localStorage.setItem('discord_id', discord_id)
     },
     retrieveTokenAndDiscordId() {
       const url = new URL(window.location.href)
       const token = url.searchParams.get('token')
-      const discordID = url.searchParams.get('discord_id')
+      const discord_id = url.searchParams.get('discord_id')
       if (token) {
         this.setToken(token)
       }
-      if (discordID) {
-        this.setDiscordId(discordID)
+      if (discord_id) {
+        this.setDiscordId(discord_id)
       }
     },
-    getUsername: async function (): Promise<string | null> {
-      if (!this.discordID) {
-        console.error('No Discord ID found in local storage.')
+    getUser: async function (): Promise<string | null> {
+      if (!this.discord_id) {
         return null
       }
 
-      const response = await fetch(`${BASE_URL}/discord/${this.discordID}/`, {
+      const response = await fetch(`${BASE_URL}/discord/${this.discord_id}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.token}`
+          Authorization: `Bearer ${this.token}`
         }
       })
 
       if (!response.ok) {
-        console.error('Failed to get username:', response)
+        console.error('Failed to get user:', response)
         return null
       }
 
       const user = await response.json()
-      return user.global_name
+      return user
     }
   }
 })

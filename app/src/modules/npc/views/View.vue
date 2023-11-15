@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { useCharacterStore } from '../character.store'
+import { useNpcStore } from '../npc.store.js'
 import DiceRoller from '@/components/DiceRoller.vue'
 import avatar from '@/assets/default.jpg'
 
 const props = defineProps({ id: String })
-const characterStore = useCharacterStore()
+const npcStore = useNpcStore()
 const webhook =
   'https://discord.com/api/webhooks/1128793925461737742/6ecKxmLAYFcNapF_sjA32Uq14zU_ScPIrYEJIftDWYGuUDb7tG4W50pbhmKvofKxVsDW'
 
@@ -20,13 +20,13 @@ const getDamageTypeClass = (key: string) => {
 }
 
 onMounted(async () => {
-  await characterStore.getCharacter(props.id)
+  await npcStore.getNpc(props.id)
 })
 </script>
 
 <template>
-  <div v-if="characterStore.error">{{ characterStore.error }}</div>
-  <div v-else-if="characterStore.character" style="padding-bottom: 1em">
+  <div v-if="npcStore.error">{{ npcStore.error }}</div>
+  <div v-else-if="npcStore.npc" style="padding-bottom: 1em">
     <div class="row align-items-start">
       <div class="col-md-4">
         <div class="card shadow-sm mb-3" style="max-width: 540px">
@@ -36,25 +36,25 @@ onMounted(async () => {
             </div>
             <div class="col-md-8">
               <div class="card-header card-title bg-dark-subtle h5">
-                {{ characterStore.character.name }}
+                {{ npcStore.npc.name }}
               </div>
               <div class="card-body">
                 <ul class="list-group text-capitalize">
                   <li class="list-group-item border-0 pt-2 ps-0 pb-0">
                     <span class="fw-semibold">Race: </span
-                    >{{ characterStore.character.race }}
+                    >{{ npcStore.npc.race }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
                     <span class="fw-semibold">Gender: </span
-                    >{{ characterStore.character.gender }}
+                    >{{ npcStore.npc.gender }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
                     <span class="fw-semibold"> Ammo: </span
-                    >{{ characterStore.character.ammo }}
+                    >{{ npcStore.npc.ammo }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
                     <span class="fw-semibold">Money: </span
-                    >{{ characterStore.character.money }}
+                    >{{ npcStore.npc.money }}
                   </li>
                 </ul>
               </div>
@@ -62,36 +62,34 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Primary</div>
+          <div class="card-header card-title bg-dark-subtle h6">Primary</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
               <li class="list-group-item border-0 pt-2 pb-0">
                 <span class="fw-semibold">Charisma: </span
-                >{{ characterStore.character.charisma }}
+                >{{ npcStore.npc.charisma }}
               </li>
               <li class="list-group-item border-0 py-0">
-                <span class="fw-semibold">Pace: </span
-                >{{ characterStore.character.pace }}
+                <span class="fw-semibold">Pace: </span>{{ npcStore.npc.pace }}
               </li>
               <li class="list-group-item border-0 py-0">
-                <span class="fw-semibold">Parry: </span
-                >{{ characterStore.character.parry }}
+                <span class="fw-semibold">Parry: </span>{{ npcStore.npc.parry }}
               </li>
               <li class="list-group-item border-0 py-0">
                 <span class="fw-semibold">Toughness: </span
-                >{{ characterStore.character.toughness }}
+                >{{ npcStore.npc.toughness }}
               </li>
             </ul>
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Damage</div>
+          <div class="card-header card-title bg-dark-subtle h6">Damage</div>
           <div class="card-body">
             <div
               class="d-flex flex-row justify-content-around align-items-center"
             >
               <div
-                v-for="(value, key) in characterStore.character.damage"
+                v-for="(value, key) in npcStore.npc.damage"
                 :key="key"
                 class="d-flex flex-column text-center"
               >
@@ -109,14 +107,12 @@ onMounted(async () => {
       </div>
       <div class="col-md-4">
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">
-            Attributes
-          </div>
+          <div class="card-header card-title bg-dark-subtle h6">Skills</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
               <li
                 class="list-group-item border-0 py-0"
-                v-for="(value, key) in characterStore.character.attributes"
+                v-for="(value, key) in npcStore.npc.attributes"
                 :key="key"
               >
                 <span class="fw-semibold">{{ key }}: </span>{{ value }}
@@ -125,12 +121,12 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Skills</div>
+          <div class="card-header card-title bg-dark-subtle h6">Skills</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
               <li
                 class="list-group-item border-0 py-0"
-                v-for="(value, key) in characterStore.character.skills"
+                v-for="(value, key) in npcStore.npc.skills"
                 :key="key"
               >
                 <span class="fw-semibold">{{ key }}: </span>{{ value }}
@@ -139,16 +135,12 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">
-            Hindrances
-          </div>
+          <div class="card-header card-title bg-dark-subtle h6">Hindrances</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
               <li
                 class="list-group-item border-0 fw-semibold py-0"
-                v-for="hindrance in characterStore.character.hindrances.split(
-                  ','
-                )"
+                v-for="hindrance in npcStore.npc.hindrances.split(',')"
                 :key="hindrance"
               >
                 {{ hindrance.trim() }}
@@ -157,12 +149,12 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Edges</div>
+          <div class="card-header card-title bg-dark-subtle h6">Edges</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
               <li
                 class="list-group-item border-0 fw-semibold py-0"
-                v-for="edge in characterStore.character.edges.split(',')"
+                v-for="edge in npcStore.npc.edges.split(',')"
                 :key="edge"
               >
                 {{ edge.trim() }}
@@ -173,15 +165,13 @@ onMounted(async () => {
       </div>
       <div class="col-md-4">
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">
-            Cyberware
-          </div>
+          <div class="card-header card-title bg-dark-subtle h6">Cyberware</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
-              <template v-if="characterStore.character.cyberware.length > 0">
+              <template v-if="npcStore.npc.cyberware.length > 0">
                 <li
                   class="list-group-item border-0 fw-semibold py-0"
-                  v-for="cyberware in characterStore.character.cyberware"
+                  v-for="cyberware in npcStore.npc.cyberware"
                   :key="cyberware.id"
                 >
                   {{ cyberware.name }}
@@ -194,13 +184,13 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Powers</div>
+          <div class="card-header card-title bg-dark-subtle h6">Powers</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
-              <template v-if="characterStore.character.powers.length > 0">
+              <template v-if="npcStore.npc.powers.length > 0">
                 <li
                   class="list-group-item border-0 fw-semibold py-0"
-                  v-for="power in characterStore.character.powers"
+                  v-for="power in npcStore.npc.powers"
                   :key="power.id"
                 >
                   {{ power.name }}
@@ -213,13 +203,13 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Weapons</div>
+          <div class="card-header card-title bg-dark-subtle h6">Weapons</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
-              <template v-if="characterStore.character.weapons.length > 0">
+              <template v-if="npcStore.npc.weapons.length > 0">
                 <li
                   class="list-group-item border-0 py-0"
-                  v-for="(weapon, index) in characterStore.character.weapons"
+                  v-for="(weapon, index) in npcStore.npc.weapons"
                   :key="index"
                 >
                   ({{ weapon.quantity }}x)
@@ -233,13 +223,13 @@ onMounted(async () => {
           </div>
         </div>
         <div class="card shadow-sm mb-3">
-          <div class="card-header card-title bg-dark-subtle fs-5">Gear</div>
+          <div class="card-header card-title bg-dark-subtle h6">Gear</div>
           <div class="card-body">
             <ul class="list-group rounded-0 text-capitalize">
-              <template v-if="characterStore.character.gear.length > 0">
+              <template v-if="npcStore.npc.gear.length > 0">
                 <li
                   class="list-group-item border-0 py-0"
-                  v-for="(gear, index) in characterStore.character.gear"
+                  v-for="(gear, index) in npcStore.npc.gear"
                   :key="index"
                 >
                   ({{ gear.quantity }}x)
@@ -256,7 +246,8 @@ onMounted(async () => {
     </div>
   </div>
   <div v-else>
-    <p>Loading Character...</p>
+    <p>Loading Npc...</p>
   </div>
   <DiceRoller :webhook="webhook" />
 </template>
+../npc.store

@@ -28,7 +28,14 @@ const emit = defineEmits<{
 
 <template>
   <div class="form-floating small">
-    <input class="form-control rounded-0 border-light" :type="type" :placeholder="label" :value="modelValue" @input="updateValue" v-bind="$attrs">
+    <input
+      class="form-control rounded-0 border-light"
+      :type="type"
+      :placeholder="label"
+      :value="modelValue"
+      @input="updateValue"
+      v-bind="$attrs"
+    />
     <label>{{ label }}</label>
   </div>
 </template>

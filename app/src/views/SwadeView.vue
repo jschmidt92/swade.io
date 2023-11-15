@@ -17,13 +17,21 @@ const prevPage = () => {
 
 <template>
   <div class="col-md-6 offset-md-3">
-      <div class="input-group mb-3">
-          <button class="btn btn-light" @click="prevPage">PREV</button>
-          <span class="d-flex justify-content-around align-items-center px-3"><input class="form-control" v-model="page" type="number" min="1" :max="pages" />/{{ pages }}</span>
-          <button class="btn btn-light" @click="nextPage">NEXT</button>
-      </div>
-      <VuePDF :pdf="pdf" :page="page" fit-parent>
-        <div class="text-dark ms-2">Loading...</div>
-      </VuePDF>
+    <div class="input-group mb-3">
+      <button class="btn btn-light" @click="prevPage">PREV</button>
+      <span class="d-flex justify-content-around align-items-center px-3"
+        ><input
+          class="form-control"
+          v-model="page"
+          type="number"
+          min="1"
+          :max="pages"
+        />/{{ pages }}</span
+      >
+      <button class="btn btn-light" @click="nextPage">NEXT</button>
+    </div>
+    <VuePDF :pdf="pdf" :page="page" fit-parent>
+      <div class="text-dark ms-2">Loading...</div>
+    </VuePDF>
   </div>
 </template>

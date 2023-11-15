@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = defineProps({
   options: {
@@ -23,12 +23,18 @@ const emit = defineEmits<{
 const selectedOption = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
-});
+})
 </script>
 
 <template>
   <select class="form-select border-light" v-model="selectedOption">
     <option disabled value="">{{ placeholder }}</option>
-    <option v-for="option in props.options" :key="option.value" :value="option.value">{{ option.label }}</option>
+    <option
+      v-for="option in props.options"
+      :key="option.value"
+      :value="option.value"
+    >
+      {{ option.label }}
+    </option>
   </select>
 </template>

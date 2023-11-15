@@ -15,10 +15,12 @@ const pinia = createPinia()
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 library.add(faDiscord)
 library.add(faEye)
 library.add(faPenToSquare)
+library.add(faPlus)
 library.add(faTrash)
 
 app.use(pinia)

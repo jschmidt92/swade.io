@@ -6,7 +6,6 @@ import EncounterDetails from './views/View.vue'
 import EncounterList from './views/List.vue'
 import EncounterUpdate from './views/Update.vue'
 
-
 const encounterRoutes: Array<RouteRecordRaw> = [
   {
     path: '/encounters',

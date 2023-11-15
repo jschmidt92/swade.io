@@ -24,11 +24,11 @@ export interface EncounterView {
   notes: string
   body: string
   characters: any[]
-  monsters: any[]
+  npcs: any[]
 }
 
-const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
-// const BASE_URL = 'http://swadebot.api:8000/api'
+// const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
+const BASE_URL = 'http://135.135.196.140:8000'
 
 export const useEncounterStore = defineStore('encounter', {
   state: () => ({
@@ -39,7 +39,7 @@ export const useEncounterStore = defineStore('encounter', {
   actions: {
     async createEncounter(encounter: EncounterCreate) {
       try {
-        const response = await fetch(`${BASE_URL}/encounters`, {
+        const response = await fetch(`${BASE_URL}/encounters/new/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ export const useEncounterStore = defineStore('encounter', {
     },
     async getEncounters() {
       try {
-        let data = await fetch(`${BASE_URL}/encounters`)
+        let data = await fetch(`${BASE_URL}/encounters/`)
         if (!data.ok) {
           throw Error('No data available')
         }
@@ -70,7 +70,7 @@ export const useEncounterStore = defineStore('encounter', {
     },
     async getEncounter(id: any) {
       try {
-        let data = await fetch(`${BASE_URL}/encounters/` + id)
+        let data = await fetch(`${BASE_URL}/encounters/${id}/`)
         if (!data.ok) {
           throw Error('Encounter does not exist')
         }
@@ -82,18 +82,23 @@ export const useEncounterStore = defineStore('encounter', {
     },
     async updateEncounter(encounter: EncounterUpdate) {
       try {
-        const response = await fetch(`${BASE_URL}/encounters/${encounter.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(encounter)
-        })
+        const response = await fetch(
+          `${BASE_URL}/encounters/${encounter.id}/`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(encounter)
+          }
+        )
         if (!response.ok) {
           throw Error('Could not update encounter')
         }
         const updatedEncounter = await response.json()
-        const index = this.encounters.findIndex(c => c.id === updatedEncounter.id)
+        const index = this.encounters.findIndex(
+          (c) => c.id === updatedEncounter.id
+        )
         if (index !== -1) {
           this.encounters.splice(index, 1, updatedEncounter)
         }

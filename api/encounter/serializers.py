@@ -13,7 +13,7 @@ class CharacterSerializer(ModelSerializer):
 class NPCSerializer(ModelSerializer):
     class Meta:
         model = NPC
-        fields = ["name", "damage"]
+        fields = ["name", "damage", "faction"]
 
 
 class EncounterSerializer(ModelSerializer):

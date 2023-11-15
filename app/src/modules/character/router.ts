@@ -6,7 +6,6 @@ import CharacterDetails from './views/View.vue'
 import CharacterList from './views/List.vue'
 import CharacterUpdate from './views/Update.vue'
 
-
 const characterRoutes: Array<RouteRecordRaw> = [
   {
     path: '/characters',

@@ -8,6 +8,9 @@ from weapon.models import Weapon
 CHAR_GENDER = [("male", "Male"), ("female", "Female")]
 
 
+CHAR_FACTION = [("unknown", "Unknown"), ("neutral", "Neutral"), ("friendly", "Friendly"), ("enemy", "Enemy")]
+
+
 CHAR_RACE = [
     ("android", "Android"),
     ("angler", "Angler"),
@@ -63,6 +66,7 @@ class NPC(models.Model):
     name = models.CharField(max_length=255)
     race = models.CharField(max_length=255, choices=CHAR_RACE)
     gender = models.CharField(max_length=255, choices=CHAR_GENDER)
+    faction = models.CharField(max_length=255, choices=CHAR_FACTION, default="unknown")
     charisma = models.IntegerField(default=0)
     pace = models.IntegerField(default=0)
     parry = models.IntegerField(default=0)

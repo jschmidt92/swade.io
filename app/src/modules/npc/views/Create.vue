@@ -2,25 +2,28 @@
 import { ComputedRef, computed, reactive, ref, Ref } from 'vue'
 import BaseInput from '@/components/BaseInput.vue'
 import BaseListBox from '@/components/BaseListBox.vue'
-import { useCharacterStore, type CharacterCreate } from '../character.store'
+import { useAuthStore } from '@/stores/auth.store'
+import { useNpcStore, type NpcCreate } from '../npc.store'
+
+const authStore = useAuthStore()
 
 interface Dictionary {
   name: string
   value: string
 }
 
-interface FormCharacterCreate
-  extends Omit<CharacterCreate, 'attributes' | 'skills' | 'damage'> {
+interface FormNpcCreate
+  extends Omit<NpcCreate, 'attributes' | 'skills' | 'damage'> {
   attributes: Record<string, string>
   skills: Record<string, string>
   damage: string
 }
 
-const form = reactive<FormCharacterCreate>({
-  discordID: '',
+const form = reactive<FormNpcCreate>({
   name: '',
   race: '',
   gender: '',
+  faction: '',
   charisma: 0,
   pace: 0,
   parry: 0,
@@ -34,7 +37,7 @@ const form = reactive<FormCharacterCreate>({
   money: 0
 })
 
-const characterStore = useCharacterStore()
+const npcStore = useNpcStore()
 const error = ref<string | null>(null)
 const isLoading = ref(false)
 
@@ -55,25 +58,55 @@ const genders = [
   { label: 'Female', value: 'female' }
 ]
 
+const factions = [
+  { label: 'Unknown', value: 'unknown' },
+  { label: 'Neutral', value: 'neutral' },
+  { label: 'Friendly', value: 'friendly' },
+  { label: 'Enemy', value: 'enemy' }
+]
+
 const races = [
   { label: 'Android', value: 'android' },
+  { label: 'Anklebiter', value: 'anklebiter' },
+  { label: 'Angler', value: 'angler' },
+  { label: 'A-Pex', value: 'apex' },
   { label: 'Aquarian', value: 'aquarian' },
   { label: 'Aurax', value: 'aurax' },
   { label: 'Avion', value: 'avion' },
+  { label: 'Behemoth', value: 'behemoth' },
+  { label: 'Bloodwing', value: 'bloodwing' },
+  { label: 'Boomer', value: 'boomer' },
+  { label: 'Colemata', value: 'colemata' },
   { label: 'Construct', value: 'construct' },
   { label: 'Deader', value: 'deader' },
+  { label: 'Death Crawler (Swarm)', value: 'deathcrawler' },
+  { label: 'Drake', value: 'drake' },
   { label: 'Dwarf', value: 'dwarf' },
   { label: 'Elf', value: 'elf' },
   { label: 'Floran', value: 'floran' },
   { label: 'Half-Elve', value: 'halfelve' },
   { label: 'Half-Folk', value: 'halffolk' },
   { label: 'Human', value: 'human' },
+  { label: 'Hunter', value: 'hunter' },
   { label: 'Insectoid', value: 'insectoid' },
   { label: 'Kalian', value: 'kalian' },
+  { label: 'Krok', value: 'krok' },
+  { label: 'Krok, Giant', value: 'krokgiant' },
+  { label: 'Lightning Darter (Swarm)', value: 'lightningdarter' },
+  { label: 'Lacerauns', value: 'lacerauns' },
+  { label: 'Mauler', value: 'mauler' },
   { label: 'Rakashan', value: 'rakashan' },
+  { label: 'Ravager', value: 'ravager' },
   { label: 'Robot', value: 'robot' },
+  { label: 'Sailfin', value: 'sailfin' },
   { label: 'Saurian', value: 'saurian' },
+  { label: 'Scrat', value: 'scrat' },
+  { label: 'Scute Boar', value: 'scuteboar' },
   { label: 'Serran', value: 'serran' },
+  { label: 'Scylla', value: 'scylla' },
+  { label: 'Scylla, Giant', value: 'scyllagiant' },
+  { label: 'Siren Creeper', value: 'sirencreeper' },
+  { label: 'Spitter', value: 'spitter' },
   { label: 'Yeti', value: 'yeti' }
 ]
 
@@ -139,6 +172,7 @@ const create = async () => {
     !form.name ||
     !form.race ||
     !form.gender ||
+    !form.faction ||
     !form.charisma ||
     !form.pace ||
     !form.parry ||
@@ -150,7 +184,7 @@ const create = async () => {
     return
   }
 
-  const userId = localStorage.getItem('discordId')
+  const userId = authStore.discord_id
   if (!userId) {
     error.value = 'Invalid Discord User ID.'
   }
@@ -158,7 +192,7 @@ const create = async () => {
   form.discordID = userId
 
   const jsonFields = ['damage']
-  const parsedFields: Partial<CharacterCreate> = {}
+  const parsedFields: Partial<NpcCreate> = {}
   for (const field of jsonFields) {
     try {
       parsedFields[field] = JSON.parse(form[field])
@@ -171,18 +205,18 @@ const create = async () => {
   const { attributes, skills, damage, ...otherFields } = form
   console.log(form)
 
-  const characterData: CharacterCreate = {
+  const npcData: NpcCreate = {
     ...otherFields,
     ...parsedFields,
     attributes: jsonFormatAttributes.value,
     skills: jsonFormatSkills.value
-  } as CharacterCreate
+  } as NpcCreate
 
   isLoading.value = true
   try {
-    await characterStore.createCharacter(characterData)
+    await npcStore.createNpc(npcData)
   } catch (e) {
-    error.value = 'An error occurred while creating the character.'
+    error.value = 'An error occurred while creating the npc.'
   } finally {
     isLoading.value = false
   }
@@ -202,12 +236,13 @@ const create = async () => {
       />
       <BaseInput
         v-model="form.name"
-        label="Character Name:"
+        label="Npc Name:"
         type="text"
         class="mb-3"
       />
       <BaseListBox v-model="form.race" :options="races" class="mb-3" />
       <BaseListBox v-model="form.gender" :options="genders" class="mb-3" />
+      <BaseListBox v-model="form.faction" :options="factions" class="mb-3" />
       <BaseInput
         v-model="form.charisma"
         label="Charisma:"
