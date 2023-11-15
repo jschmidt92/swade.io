@@ -10,12 +10,12 @@ const playerRoutes: Array<RouteRecordRaw> = [
     component: PlayersModule,
     children: [
       {
-        path: ':id/dashboard',
+        path: 'dashboard',
         name: 'PlayerDashboard',
         component: PlayerDashboard
       },
       {
-        path: ':id/inventory',
+        path: 'inventory',
         name: 'PlayerInventory',
         component: PlayerInventory
       }

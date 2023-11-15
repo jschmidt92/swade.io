@@ -12,7 +12,7 @@
         <ul class="dropdown-menu">
           <router-link
             class="dropdown-item"
-            :to="`/player/${authStore.discord_id}/dashboard`"
+            :to="`/player/dashboard`"
             >Dashboard</router-link
           >
           <router-link class="dropdown-item" to="/" @click="authStore.logout"
