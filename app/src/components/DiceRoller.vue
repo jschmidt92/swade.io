@@ -39,8 +39,8 @@ const diceOptions = [
 ]
 
 const getUsername = async () => {
-  const username = await authStore.getUser()
-  return username
+  const user = await authStore.getUser()
+  return user.global_name
 }
 
 const selectedDice = reactive<Record<number, number>>({})

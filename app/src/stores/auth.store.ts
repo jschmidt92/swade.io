@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
         this.setDiscordId(discord_id)
       }
     },
-    getUser: async function (): Promise<string | null> {
+    getUser: async function (): Promise<any | null> {
       if (!this.discord_id) {
         return null
       }
