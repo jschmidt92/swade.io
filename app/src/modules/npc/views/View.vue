@@ -49,11 +49,11 @@ onMounted(async () => {
                     >{{ npcStore.npc.gender }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
-                    <span class="fw-semibold"> Ammo: </span
+                    <span class="fw-semibold">Ammo: </span
                     >{{ npcStore.npc.ammo }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
-                    <span class="fw-semibold">Money: </span
+                    <span class="fw-semibold">Credits: </span
                     >{{ npcStore.npc.money }}
                   </li>
                 </ul>

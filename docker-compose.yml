@@ -1,0 +1,94 @@
+version: '3.8'
+name: swadeio
+services:
+  # pgdb:
+  #   container_name: pgdb
+  #   image: postgres:alpine
+  #   restart: unless-stopped
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=swade
+  #   ports:
+  #     - '5432:5432'
+  #   volumes:
+  #     - pgdb:/var/lib/postgresql/data
+  #   networks:
+  #     - swadeIONet
+
+  # pgadmin:
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   restart: unless-stopped
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=webmin@swade.io
+  #     - PGADMIN_DEFAULT_PASSWORD=postgres
+  #   ports:
+  #     - '5050:80'
+  #   networks:
+  #     - swadeIONet
+  #   depends_on:
+  #     - pgdb
+
+  swade.api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: python3 manage.py runserver 0.0.0.0:4000
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./api:/usr/src/app
+    restart: unless-stopped
+    # networks:
+    #   - swadeIONet
+    # depends_on:
+    #   - pgdb
+
+  swade.app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: npm run dev
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./app:/usr/src/app
+      - /app/node_modules
+    restart: unless-stopped
+    # networks:
+    #   - swadeIONet
+    depends_on:
+      - swade.api
+
+  swade.bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    command: python3 main.py
+    volumes:
+      - ./bot:/usr/src/app
+    restart: unless-stopped
+    # networks:
+    #   - swadeIONet
+    depends_on:
+      - swade.api
+
+#  nginx:
+#    image: nginx:latest
+#    ports:
+#      - '80:80'
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+#    depends_on:
+#      - swade.api
+#      # - swade.app
+#    networks:
+#      - swadeIONet
+
+# volumes:
+#   pgdb:
+#     driver: local
+
+# networks:
+#   swadeIONet:

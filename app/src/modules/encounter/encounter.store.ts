@@ -27,8 +27,8 @@ export interface EncounterView {
   npcs: any[]
 }
 
-// const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
-const BASE_URL = 'http://135.135.196.140:8000'
+const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
+// const BASE_URL = 'http://swade.api:4000'
 
 export const useEncounterStore = defineStore('encounter', {
   state: () => ({

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     '192.168.4.34',
     'localhost',
     'swade.api',
+    'swade.app',
     'swade.bot',
     'innovativedevsolutions.org',
 ]

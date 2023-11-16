@@ -49,11 +49,11 @@ onMounted(async () => {
                     >{{ characterStore.character.gender }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
-                    <span class="fw-semibold"> Ammo: </span
+                    <span class="fw-semibold">Ammo: </span
                     >{{ characterStore.character.ammo }}
                   </li>
                   <li class="list-group-item border-0 ps-0 py-0">
-                    <span class="fw-semibold">Money: </span
+                    <span class="fw-semibold">Credits: </span
                     >{{ characterStore.character.money }}
                   </li>
                 </ul>

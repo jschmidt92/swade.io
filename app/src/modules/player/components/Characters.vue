@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import avatar from '@/assets/default.jpg'
-import { usePlayerData } from '../playerUtils.js'
+import { usePlayerData } from '../player.utils.js'
 
 const { characters } = usePlayerData()
 </script>
@@ -63,3 +63,4 @@ const { characters } = usePlayerData()
     </div>
   </div>
 </template>
+../player.utils.js

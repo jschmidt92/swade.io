@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { usePlayerData } from '../playerUtils.js'
+import { usePlayerData } from '../player.utils.js'
 
 const { getPlayerWealth } = usePlayerData()
 </script>
@@ -24,3 +24,4 @@ const { getPlayerWealth } = usePlayerData()
     </div>
   </div>
 </template>
+../player.utils.js

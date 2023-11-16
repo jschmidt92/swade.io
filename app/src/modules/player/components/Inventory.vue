@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { usePlayerData } from '../playerUtils.js'
+import { usePlayerData } from '../player.utils.js'
 
 const { getCurrentDateTime, getPlayerInventory } = usePlayerData()
 </script>
@@ -42,3 +42,4 @@ const { getCurrentDateTime, getPlayerInventory } = usePlayerData()
     </div>
   </div>
 </template>
+../player.utils.js
