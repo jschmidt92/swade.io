@@ -70,7 +70,7 @@ def discord_login_redirect(request: HttpRequest):
     access_token = user.get("access_token", None)
     if discord_user:
         login(request, discord_user)
-        return redirect(f"http://135.135.196.140:5173?token={access_token}&discord_id={user['id']}")
+        return redirect(f"https://swadeio.innovativedevsolutions.org?token={access_token}&discord_id={user['id']}")
     else:
         return redirect("/discord/oauth2/login")
 

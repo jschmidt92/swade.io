@@ -36,6 +36,8 @@ ALLOWED_HOSTS = [
     'swade.app',
     'swade.bot',
     'innovativedevsolutions.org',
+    'apiv1.innovativedevsolutions.org',
+    'swadeio.innovativedevsolutions.org'
 ]
 
 AUTHENTICATION_BACKENDS = [
