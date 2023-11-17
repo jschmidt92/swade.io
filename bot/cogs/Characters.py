@@ -1,49 +1,44 @@
 from config import CHARACTER_CHANNEL_ID
 from discord.ext import commands
-from dotenv import load_dotenv
 from utils.character_utils import *
 import discord
-import requests
-
-load_dotenv()
 
 
-class Characters(commands.Cog):
+class characters(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.character_channel_id = int(os.getenv("CHARACTER_CHANNEL_ID"))
 
     async def cog_check(self, ctx):
         return (
-            ctx.channel.id == self.character_channel_id
-            and ctx.guild.me.guild_permissions_manage_messages
+            ctx.channel.id == CHARACTER_CHANNEL_ID
+            and ctx.guild.me.guild_permissions.manage_messages
         )
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
-                "Missing Argument. Please check the command syntax and try again."
+                "Missing argument. Please check the command syntax and try again."
             )
 
     def create_character_embed(self, character):
         cyberware = [
-            f"{item['name']} (Strain: {item['strain']}, Effect: {item['effect']}, Notes: ({item['notes']})"
+            f"{item['name']} (Strain: {item['strain']}, Price: ${item['price']}) - {item['effect']} ({item['notes']})"
             for item in character["cyberware"]
         ]
 
         powers = [
-            f"{power['name']} PP: ({power['pp']}, Range: {power['range']}, Duration: {power['duration']}), Effect: {power['effect']}, Notes: ({power['notes']})"
+            f"{power['name']} ({power['pp']} PP, Range: {power['range']}, Duration: {power['duration']}) - {power['effect']} ({power['notes']})"
             for power in character["powers"]
         ]
 
         gear = [
-            f"({item['quantity']}x) {item['gear']['name']} (Min Str: {item['gear'][['min_str']]}, Weight: {item['gear']['wt']}, Notes: {item['gear']['notes']})"
+            f"{item['gear']['name']} (Quantity: {item['quantity']}, Weight: {item['gear']['wt']}, Price: ${item['gear']['price']})"
             for item in character["gear"]
         ]
 
         weapons = [
-            f"({weapon['quantity']}x) {weapon['weapon']['name']} (Range: {weapon['weapon']['range']}, Damage: {weapon['weapon']['damage']}, ROF: {weapon['weapon']['rof']}, Shots: {weapon['weapon']['shots']}, Min Str: {weapon['weapon']['min_str']}, Weight: {weapon['weapon']['wt']})"
+            f"{weapon['weapon']['name']} (Quantity: {weapon['quantity']}, Range: {weapon['weapon']['range']}, Damage: {weapon['weapon']['damage']}, ROF: {weapon['weapon']['rof']}, Shots: {weapon['weapon']['shots']}, Min Str: {weapon['weapon']['min_str']}, Weight: {weapon['weapon']['wt']}, Price: ${weapon['weapon']['price']})"
             for weapon in character["weapons"]
         ]
 
@@ -88,9 +83,7 @@ class Characters(commands.Cog):
         discord_id = player.id if player else str(ctx.author.id)
 
         try:
-            response = get_player_character(discord_id, character_name)
-            response.raise_for_status()
-            character = response.json()
+            character = get_player_character(discord_id, character_name)
         except requests.exceptions.RequestException as e:
             await ctx.author.send(f"Error getting characters: {e}")
             return
@@ -165,9 +158,7 @@ class Characters(commands.Cog):
         discord_id = player.id if player else str(ctx.author.id)
 
         try:
-            response = get_player_characters(discord_id)
-            response.raise_for_status()
-            characters = response.json()
+            characters = get_player_characters(discord_id)
         except requests.exceptions.RequestException as e:
             await ctx.author.send(f"Error getting characters: {e}")
             return
@@ -182,4 +173,4 @@ class Characters(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Characters(bot))
+    await bot.add_cog(characters(bot))

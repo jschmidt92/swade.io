@@ -1,17 +1,9 @@
+from config import TOKEN, MAIN_CHANNEL_ID, OWNER_IDS
 from discord.ext import commands
-from dotenv import load_dotenv
 from multiprocessing import Process
 import asyncio
 import discord
-import json
 import os
-
-load_dotenv()
-
-TOKEN = os.getenv("TOKEN")
-MAIN_CHANNEL_ID = int(os.getenv("MAIN_CHANNEL_ID"))
-OWNER_IDS_STR = os.getenv("OWNER_IDS")
-OWNER_IDS = json.loads(OWNER_IDS_STR)
 
 intents = discord.Intents.all()
 

@@ -1,0 +1,13 @@
+asyncio
+django
+django-cors-headers
+django-filter
+djangorestframework
+discord
+DiscordUtils
+psycopg2
+python-dotenv
+PyNaCl
+python-dotenv
+yt-dlp
+requests

@@ -1,10 +1,5 @@
-from dotenv import load_dotenv
-import os
+from config import API_BASE_URL
 import requests
-
-load_dotenv()
-
-API_BASE_URL = str(os.environ["API_BASE_URL"])
 
 
 def get_all_characters():

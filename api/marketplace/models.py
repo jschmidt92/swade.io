@@ -8,5 +8,4 @@ class Transaction(models.Model):
     item_id = models.IntegerField(null=True)
     notes = models.TextField(blank=True)
     transaction_time = models.DateTimeField(auto_now_add=True)
-    discord = models.ForeignKey('discordlogin.DiscordUser', on_delete=models.CASCADE)
     character = models.ForeignKey('character.Character', on_delete=models.CASCADE)
