@@ -30,17 +30,19 @@ services:
   #   depends_on:
   #     - pgdb
 
-  # swade.api:
+  swade.api:
   #   build:
   #     context: ./api
   #     dockerfile: Dockerfile
-  #   image: jschmidt92/swade-api:latest
-  #   command: python3 manage.py runserver 0.0.0.0:4000
-  #   ports:
-  #     - '4000:4000'
+    image: jschmidt92/swade-api:latest
+    stdin_open: true
+    tty: true
+    command: python3 manage.py runserver 0.0.0.0:4000
+    ports:
+      - '4000:4000'
   #   volumes:
   #     - ./api:/usr/src/app
-  #   restart: unless-stopped
+    restart: unless-stopped
   #   networks:
   #     - swadeIONet
   #   depends_on:
@@ -51,6 +53,8 @@ services:
   #     context: ./app
   #     dockerfile: Dockerfile
   #   image: jschmidt92/swade-app:latest
+  #   stdin_open: true
+  #   tty: true
   #   command: npm run dev
   #   ports:
   #     - '5173:5173'
@@ -63,19 +67,21 @@ services:
   #   depends_on:
   #     - swade.api
 
-  swade.bot:
-    # build:
-    #   context: ./bot
-    #   dockerfile: Dockerfile
-    image: jschmidt92/swade-bot:latest
-    command: python3 main.py
-    # volumes:
-    #   - ./bot:/usr/src/app
-    restart: unless-stopped
-    # networks:
-    #   - swadeIONet
-    # depends_on:
-    #   - swade.api
+  # swade.bot:
+  #   build:
+  #     context: ./bot
+  #     dockerfile: Dockerfile
+  #   image: jschmidt92/swade-bot:latest
+  #   stdin_open: true
+  #   tty: true
+  #   command: python3 main.py
+  #   volumes:
+  #     - ./bot:/usr/src/app
+  #   restart: unless-stopped
+  #   networks:
+  #     - swadeIONet
+  #   depends_on:
+  #     - swade.api
 
 #  nginx:
 #    image: nginx:latest

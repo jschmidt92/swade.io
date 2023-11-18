@@ -15,6 +15,7 @@ class DiscordUser(models.Model):
     email = models.CharField(max_length=255)
     verified = models.BooleanField()
     last_login = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=False)
     is_gm = models.BooleanField(default=False)
     is_player = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)

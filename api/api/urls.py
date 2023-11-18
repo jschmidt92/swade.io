@@ -25,6 +25,7 @@ urlpatterns = [
     path("characters/", include("character.urls")),
     path("cyberware/", include("cyberware.urls")),
     path("encounters/", include("encounter.urls")),
+    path("events/", include("event.urls")),
     path("gear/", include("gear.urls")),
     path("npcs/", include("npc.urls")),
     path("powers/", include("power.urls")),

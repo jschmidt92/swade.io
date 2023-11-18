@@ -4,6 +4,7 @@ import {
   type NestedGear,
   type NestedWeapon
 } from '@/modules/character/character.store'
+import { usePlayerStore } from '@/modules/player/player.store'
 import { useAuthStore } from '@/stores/auth.store'
 
 interface Character {
@@ -25,10 +26,12 @@ export const usePlayerData = (): {
   getPlayerCharacters: () => Promise<void>
   getPlayerInventory: () => { name: string; quantity: number }[]
   getPlayerWealth: () => string
+  playerStore: ReturnType<typeof usePlayerStore>
 } => {
-  const characterStore = useCharacterStore()
   const authStore = useAuthStore()
+  const characterStore = useCharacterStore()
   const discord_id = authStore.discord_id
+  const playerStore = usePlayerStore()
 
   const characters: Ref<Character[] | undefined> = ref([])
 
@@ -102,6 +105,7 @@ export const usePlayerData = (): {
     getCurrentDateTime,
     getPlayerCharacters,
     getPlayerInventory,
-    getPlayerWealth
+    getPlayerWealth,
+    playerStore
   }
 }

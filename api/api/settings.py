@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'cyberware.apps.CyberwareConfig',
     'discordlogin.apps.DiscordloginConfig',
     'encounter.apps.EncounterConfig',
+    'event.apps.EventConfig',
     'gear.apps.GearConfig',
     'marketplace.apps.MarketplaceConfig',
     'npc.apps.NpcConfig',
