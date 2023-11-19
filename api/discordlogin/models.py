@@ -9,7 +9,7 @@ class DiscordUser(models.Model):
     id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     global_name = models.CharField(max_length=255)
-    avatar = models.CharField(max_length=255, blank=True)
+    avatar = models.CharField(max_length=255, blank=True, null=True)
     mfa_enabled = models.BooleanField()
     locale = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
