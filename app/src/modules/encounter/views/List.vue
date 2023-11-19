@@ -14,7 +14,7 @@ onMounted(async () => {
 <template>
   <div class="col-md-12">
     <template v-if="encounters.length">
-      <ul class="list-group row">
+      <ul class="list-group list-group-horizontal">
         <li
           class="list-group-item col-md-4 border-light"
           v-for="encounter in encounters"

@@ -1,53 +1,9 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { useEventData } from '../event.utils'
 import { useAuthStore } from '@/stores/auth.store'
-import { usePlayerStore, EventAttendance } from '../player.store'
 
-const playerStore = usePlayerStore()
 const authStore = useAuthStore()
-const events = ref<
-  {
-    id: number
-    title: string
-    date: Date
-    details: string
-    attendance: Record<string, any>
-  }[]
->([])
-
-const countAttendees = (attendance: Record<string, any>) => {
-  return Object.values(attendance).filter((value) => value === true).length
-}
-
-const totalAttendees = (attendance: Record<string, any>) => {
-  return Object.keys(attendance).length
-}
-
-const formatDate = (date: any): string => {
-  const isoDate = new Date(date)
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    timeZoneName: 'short'
-  }
-  return isoDate.toLocaleString('en-US', options)
-}
-
-onMounted(async () => {
-  await playerStore.getUpcomingEvents()
-  events.value = playerStore.events
-  events.value.forEach((item) => {
-    const event: EventAttendance = {
-      event_id: item.id,
-      discord_id: authStore.discord_id
-    }
-    playerStore.getPlayerAttendance(event)
-  })
-  events.value.sort((a, b) => a.id = b.id)
-})
+const { events, handleAttendanceUpdate, countAttendees, totalAttendees, formatDate } = useEventData()
 </script>
 
 <template>
@@ -67,17 +23,66 @@ onMounted(async () => {
           </thead>
           <tbody>
             <tr v-for="event in events" :key="event.id">
-              <td>{{ countAttendees(event.attendance) }} of {{ totalAttendees(event.attendance) }}</td>
+              <td>
+                {{ countAttendees(event.attendance) }} of
+                {{ totalAttendees(event.attendance) }}
+              </td>
               <td>
                 <router-link
                   class="link-info link-underline-opacity-0"
                   to=""
+                  data-bs-toggle="modal"
+                  :data-bs-target="`#eventModal${event.id}`"
                   >{{ event.title }}</router-link
                 >
+                <div
+                  class="modal fade"
+                  :id="`eventModal${event.id}`"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabindex="-1"
+                  :aria-labelledby="`eventModalLabel${event.id}`"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header border-light">
+                        <h1 class="modal-title fs-5" :id="`eventModalLabel${event.id}`">
+                          Verify Attendance
+                        </h1>
+                        <button
+                          type="button"
+                          class="btn btn-outline-secondary border-light"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ><font-awesome-icon icon="fa-solid fa-xmark" size="lg" /></button>
+                      </div>
+                      <div class="modal-body text-center">
+                        <button
+                          class="btn btn-secondary border-light me-2"
+                          data-bs-dismiss="modal"
+                          @click="handleAttendanceUpdate(event.id, true)"
+                        >
+                          Yes <font-awesome-icon icon="fa-solid fa-thumbs-up" />
+                        </button>
+                        <button
+                          class="btn btn-outline-secondary border-light"
+                          @click="handleAttendanceUpdate(event.id, false)"
+                          data-bs-dismiss="modal"
+                        >
+                          No
+                          <font-awesome-icon icon="fa-solid fa-thumbs-down" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <p class="small mb-0">{{ formatDate(event.date) }}</p>
                 <p class="small">{{ event.details }}</p>
               </td>
-              <td class="text-center">{{ event.attendance[authStore.discord_id] ? 'Yes' : 'No' }}</td>
+              <td class="text-center">
+                {{ event.attendance[authStore.discord_id] ? 'Yes' : 'No' }}
+              </td>
             </tr>
           </tbody>
         </table>

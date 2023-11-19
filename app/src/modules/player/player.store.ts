@@ -38,11 +38,12 @@ export const usePlayerStore = defineStore('player', {
   actions: {
     async getUpcomingEvents() {
       try {
-        let data = await fetch(`${BASE_URL}/events/?limit=3`)
+        let data = await fetch(`${BASE_URL}/events/?limit=3&sort=-date`)
         if (!data.ok) {
           throw Error('No data available')
         }
         this.events = await data.json()
+        this.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         return this.events
       } catch (err: any) {
         this.error = err.message

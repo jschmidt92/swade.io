@@ -13,15 +13,9 @@ const app = createApp(App)
 const pinia = createPinia()
 
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
-import { faEye } from '@fortawesome/free-solid-svg-icons'
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
-library.add(faDiscord)
-library.add(faEye)
-library.add(faPenToSquare)
-library.add(faPlus)
-library.add(faTrash)
+import { faEye, faPenToSquare, faPlus, faTrash, faThumbsUp, faThumbsDown, faXmark } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faDiscord, faEye, faPenToSquare, faPlus, faTrash, faThumbsUp, faThumbsDown, faXmark)
 
 app.use(pinia)
 app.use(router)
