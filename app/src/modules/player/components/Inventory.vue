@@ -42,4 +42,3 @@ const { getCurrentDateTime, getPlayerInventory } = usePlayerData()
     </div>
   </div>
 </template>
-../player.utils.js

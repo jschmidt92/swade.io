@@ -24,4 +24,3 @@ const { getPlayerWealth } = usePlayerData()
     </div>
   </div>
 </template>
-../player.utils.js

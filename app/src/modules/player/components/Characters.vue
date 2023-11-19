@@ -63,4 +63,3 @@ const { characters } = usePlayerData()
     </div>
   </div>
 </template>
-../player.utils.js

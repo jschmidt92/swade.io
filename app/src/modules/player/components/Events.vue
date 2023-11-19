@@ -38,8 +38,6 @@ const { events, handleAttendanceUpdate, countAttendees, totalAttendees, formatDa
                 <div
                   class="modal fade"
                   :id="`eventModal${event.id}`"
-                  data-bs-backdrop="static"
-                  data-bs-keyboard="false"
                   tabindex="-1"
                   :aria-labelledby="`eventModalLabel${event.id}`"
                   aria-hidden="true"
@@ -59,14 +57,14 @@ const { events, handleAttendanceUpdate, countAttendees, totalAttendees, formatDa
                       </div>
                       <div class="modal-body text-center">
                         <button
-                          class="btn btn-secondary border-light me-2"
+                          class="btn btn-success me-2"
                           data-bs-dismiss="modal"
                           @click="handleAttendanceUpdate(event.id, true)"
                         >
                           Yes <font-awesome-icon icon="fa-solid fa-thumbs-up" />
                         </button>
                         <button
-                          class="btn btn-outline-secondary border-light"
+                          class="btn btn-outline-danger"
                           @click="handleAttendanceUpdate(event.id, false)"
                           data-bs-dismiss="modal"
                         >
