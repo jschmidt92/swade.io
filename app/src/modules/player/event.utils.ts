@@ -1,4 +1,3 @@
-// event.utils.ts
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
 import { usePlayerStore, EventAttendance } from './player.store'
