@@ -6,8 +6,7 @@ import avatar from '@/assets/default.jpg'
 
 const props = defineProps({ id: String })
 const characterStore = useCharacterStore()
-const webhook =
-  'https://discord.com/api/webhooks/1128793925461737742/6ecKxmLAYFcNapF_sjA32Uq14zU_ScPIrYEJIftDWYGuUDb7tG4W50pbhmKvofKxVsDW'
+const webhook = 'https://discord.com/api/webhooks/1128793925461737742/6ecKxmLAYFcNapF_sjA32Uq14zU_ScPIrYEJIftDWYGuUDb7tG4W50pbhmKvofKxVsDW'
 
 const getDamageTypeClass = (key: string) => {
   const damageTypeClasses: Record<string, string> = {
@@ -96,7 +95,7 @@ onMounted(async () => {
                 class="d-flex flex-column text-center"
               >
                 <div
-                  :class="getDamageTypeClass(key as string)"
+                  :class="getDamageTypeClass(String(key))"
                   style="width: 55px; height: 55px"
                 >
                   {{ value }}

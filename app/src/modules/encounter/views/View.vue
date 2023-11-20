@@ -1,31 +1,15 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { useEncounterStore } from '../encounter.store'
 import DiceRoller from '@/components/DiceRoller.vue'
 import banner from '@/assets/banner.jpg'
 import BaseEntityCard from '../components/BaseEntityCard.vue'
+import { useEncounterStore } from '../encounter.store'
+import { useEncounterData } from '../encounter.utils'
 
 const props = defineProps({ id: String })
+const webhook = 'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
 const encounterStore = useEncounterStore()
-const webhook =
-  'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
-
-const getFactionClass = (faction: string) => {
-  switch (faction) {
-    case 'unknown':
-      return 'bg-secondary'
-    case 'neutral':
-      return 'bg-warning'
-    case 'friendly':
-      return 'bg-success'
-    case 'enemy':
-      return 'bg-danger'
-    default:
-      return 'bg-secondary'
-  }
-}
-
-getFactionClass
+const { getFaction } = useEncounterData()
 
 onMounted(async () => {
   await encounterStore.getEncounter(props.id)
@@ -99,7 +83,7 @@ onMounted(async () => {
               <template v-if="npc.damage.Inc === 'No'">
                 <BaseEntityCard
                   :name="npc.name"
-                  :class="getFactionClass(npc.faction)"
+                  :class="getFaction(npc.faction)"
                   :damage="npc.damage"
                 />
               </template>
@@ -126,7 +110,7 @@ onMounted(async () => {
               <template v-if="npc.damage.Inc === 'Yes'">
                 <BaseEntityCard
                   :name="npc.name"
-                  :class="getFactionClass(npc.faction)"
+                  :class="getFaction(npc.faction)"
                   :damage="npc.damage"
                 />
               </template>

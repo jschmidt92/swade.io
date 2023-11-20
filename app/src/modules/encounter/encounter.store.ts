@@ -1,31 +1,5 @@
 import { defineStore } from 'pinia'
-
-export interface EncounterCreate {
-  [key: string]: any
-  name: string
-  notes: string
-  body: string
-}
-
-export interface EncountersList {
-  id: number
-  name: string
-}
-
-export interface EncounterUpdate {
-  id?: number
-  name?: string
-  notes?: string
-  body?: string
-}
-
-export interface EncounterView {
-  name: string
-  notes: string
-  body: string
-  characters: any[]
-  npcs: any[]
-}
+import { EncounterCreate, EncountersList, EncounterUpdate, EncounterView } from './encounter.interfaces'
 
 const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
 // const BASE_URL = 'http://swade.api:4000'

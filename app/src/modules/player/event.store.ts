@@ -1,35 +1,9 @@
 import { defineStore } from 'pinia'
-
-export interface EventCreate {
-  [key: string]: any
-  title: string
-  date: Date
-  details: string
-}
-
-export interface Event {
-  id: number
-  title: string
-  date: Date
-  details: string
-  attendance: Record<string, any>
-}
-
-export interface EventAttendance {
-  event_id: number
-  discord_id: string
-}
-
-export interface EventUpdateAttendance {
-  event_id: number
-  discord_id: string
-  attendance: boolean
-}
+import { Event, EventAttendance, EventCreate, EventUpdateAttendance } from './event.interfaces'
 
 const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
-// const BASE_URL = 'http://swade.api:4000'
 
-export const usePlayerStore = defineStore('player', {
+export const useEventStore = defineStore('player', {
   state: () => ({
     event: null as Event | null,
     events: [] as Event[],
@@ -93,7 +67,7 @@ export const usePlayerStore = defineStore('player', {
         console.error(this.error)
       }
     },
-    async getPlayerAttendance(event: EventAttendance) {
+    async getAttendance(event: EventAttendance) {
       try {
         const response = await fetch(`${BASE_URL}/events/attendance/get/`, {
           method: 'POST',

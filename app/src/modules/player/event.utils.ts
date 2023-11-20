@@ -1,23 +1,26 @@
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
-import { usePlayerStore, EventAttendance } from './player.store'
+import { useEventStore } from './event.store'
+import { EventAttendance } from './event.interfaces'
 
 export const useEventData = () => {
-  const playerStore = usePlayerStore()
+  const eventStore = useEventStore()
   const authStore = useAuthStore()
-  const events = ref<{
-    id: number
-    title: string
-    date: Date
-    details: string
-    attendance: Record<string, any>
-  }[]>([])
+  const events = ref<
+    {
+      id: number
+      title: string
+      date: Date
+      details: string
+      attendance: Record<string, any>
+    }[]
+  >([])
 
   const handleAttendanceUpdate = async (
     event_id: number,
     attendance: boolean
   ) => {
-    await playerStore.updateAttendance({
+    await eventStore.updateAttendance({
       event_id: event_id,
       discord_id: authStore.discord_id,
       attendance: attendance
@@ -26,8 +29,8 @@ export const useEventData = () => {
   }
 
   const refreshEvents = async () => {
-    await playerStore.getUpcomingEvents()
-    events.value = playerStore.events
+    await eventStore.getUpcomingEvents()
+    events.value = eventStore.events
   }
 
   const countAttendees = (attendance: Record<string, any>) => {
@@ -52,14 +55,14 @@ export const useEventData = () => {
   }
 
   onMounted(async () => {
-    await playerStore.getUpcomingEvents()
-    events.value = playerStore.events
+    await eventStore.getUpcomingEvents()
+    events.value = eventStore.events
     events.value.forEach((item) => {
       const event: EventAttendance = {
         event_id: item.id,
         discord_id: authStore.discord_id
       }
-      playerStore.getPlayerAttendance(event)
+      eventStore.getAttendance(event)
     })
   })
 

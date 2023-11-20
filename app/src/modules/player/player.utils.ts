@@ -1,23 +1,7 @@
 import { onMounted, ref, Ref } from 'vue'
-import {
-  useCharacterStore,
-  type NestedGear,
-  type NestedWeapon
-} from '@/modules/character/character.store'
-import { usePlayerStore } from '@/modules/player/player.store'
+import { useCharacterStore } from '@/modules/character/character.store'
 import { useAuthStore } from '@/stores/auth.store'
-
-interface Character {
-  id: number
-  discordID: number
-  name: string
-  race: string
-  gender: string
-  money: number
-  gear: NestedGear[]
-  weapons: NestedWeapon[]
-  damage: Record<string, any>
-}
+import { Character } from './player.interfaces'
 
 export const usePlayerData = (): {
   characterStore: ReturnType<typeof useCharacterStore>
@@ -26,12 +10,10 @@ export const usePlayerData = (): {
   getPlayerCharacters: () => Promise<void>
   getPlayerInventory: () => { name: string; quantity: number }[]
   getPlayerWealth: () => string
-  playerStore: ReturnType<typeof usePlayerStore>
 } => {
   const authStore = useAuthStore()
   const characterStore = useCharacterStore()
   const discord_id = authStore.discord_id
-  const playerStore = usePlayerStore()
 
   const characters: Ref<Character[] | undefined> = ref([])
 
@@ -46,10 +28,7 @@ export const usePlayerData = (): {
   }
 
   const getPlayerCharacters = async () => {
-    const playerCharacters = await characterStore.getCharacters()
-    characters.value = playerCharacters?.filter(
-      (character) => character.discordID.toString() === discord_id
-    ) as Character[]
+    characters.value = await characterStore.getPlayerCharacters(discord_id) as Character[]
   }
 
   const getPlayerInventory = (): { name: string; quantity: number }[] => {
@@ -105,7 +84,6 @@ export const usePlayerData = (): {
     getCurrentDateTime,
     getPlayerCharacters,
     getPlayerInventory,
-    getPlayerWealth,
-    playerStore
+    getPlayerWealth
   }
 }

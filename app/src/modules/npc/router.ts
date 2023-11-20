@@ -8,7 +8,7 @@ import NpcUpdate from './views/Update.vue'
 
 const NpcRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/Npcs',
+    path: '/npcs',
     component: NpcsModule,
     children: [
       {

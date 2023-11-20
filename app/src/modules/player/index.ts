@@ -1,5 +1,5 @@
 import playerModule from './Module.vue'
 import playerRoutes from './router'
-import { usePlayerStore } from './player.store'
+import { useEventStore } from './event.store'
 
-export { playerModule, playerRoutes, usePlayerStore }
+export { playerModule, playerRoutes, useEventStore }

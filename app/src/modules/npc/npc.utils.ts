@@ -1,16 +1,24 @@
 import { ComputedRef, computed, reactive, ref, Ref } from 'vue'
-import { useNpcStore, type NpcCreate } from './npc.store'
+import { useNpcStore } from './npc.store'
+import {
+  Attribute,
+  Dictionary,
+  Faction,
+  FormNpcCreate,
+  Gender,
+  NpcCreate,
+  Race,
+  Skill
+} from './npc.interfaces'
+import { useAuthStore } from '@/stores/auth.store'
 
-interface Dictionary {
-  name: string
-  value: string
-}
-
-interface FormNpcCreate
-  extends Omit<NpcCreate, 'attributes' | 'skills' | 'damage'> {
-  attributes: Record<string, string>
-  skills: Record<string, string>
-  damage: string
+export function convertEnumToArray(
+  enumObject: Record<string, string>
+): { label: string; value: string }[] {
+  return Object.keys(enumObject).map((key) => ({
+    label: enumObject[key],
+    value: key
+  }))
 }
 
 export function useNpcData() {
@@ -18,6 +26,7 @@ export function useNpcData() {
     name: '',
     race: '',
     gender: '',
+    faction: '',
     charisma: 0,
     pace: 0,
     parry: 0,
@@ -31,78 +40,22 @@ export function useNpcData() {
     money: 0
   })
 
+  const authStore = useAuthStore()
   const npcStore = useNpcStore()
   const error = ref<string | null>(null)
   const isLoading = ref(false)
 
-  const attribute = reactive({
+  const attributes = reactive<Attribute>({
     name: '',
     value: '',
-    items: [] as Dictionary[]
+    items: []
   })
 
-  const skill = reactive({
+  const skills = reactive<Skill>({
     name: '',
     value: '',
-    items: [] as Dictionary[]
+    items: []
   })
-
-  const genders = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' }
-  ]
-
-  const factions = [
-    { label: 'Unknown', value: 'unknown' },
-    { label: 'Neutral', value: 'neutral' },
-    { label: 'Friendly', value: 'friendly' },
-    { label: 'Enemy', value: 'enemy' }
-  ]
-
-  const races = [
-    { label: 'Android', value: 'android' },
-    { label: 'Anklebiter', value: 'anklebiter' },
-    { label: 'Angler', value: 'angler' },
-    { label: 'A-Pex', value: 'apex' },
-    { label: 'Aquarian', value: 'aquarian' },
-    { label: 'Aurax', value: 'aurax' },
-    { label: 'Avion', value: 'avion' },
-    { label: 'Behemoth', value: 'behemoth' },
-    { label: 'Bloodwing', value: 'bloodwing' },
-    { label: 'Boomer', value: 'boomer' },
-    { label: 'Colemata', value: 'colemata' },
-    { label: 'Construct', value: 'construct' },
-    { label: 'Deader', value: 'deader' },
-    { label: 'Death Crawler (Swarm)', value: 'deathcrawler' },
-    { label: 'Drake', value: 'drake' },
-    { label: 'Dwarf', value: 'dwarf' },
-    { label: 'Elf', value: 'elf' },
-    { label: 'Floran', value: 'floran' },
-    { label: 'Half-Elve', value: 'halfelve' },
-    { label: 'Half-Folk', value: 'halffolk' },
-    { label: 'Human', value: 'human' },
-    { label: 'Hunter', value: 'hunter' },
-    { label: 'Insectoid', value: 'insectoid' },
-    { label: 'Kalian', value: 'kalian' },
-    { label: 'Krok', value: 'krok' },
-    { label: 'Krok, Giant', value: 'krokgiant' },
-    { label: 'Lightning Darter (Swarm)', value: 'lightningdarter' },
-    { label: 'Lacerauns', value: 'lacerauns' },
-    { label: 'Mauler', value: 'mauler' },
-    { label: 'Rakashan', value: 'rakashan' },
-    { label: 'Ravager', value: 'ravager' },
-    { label: 'Robot', value: 'robot' },
-    { label: 'Sailfin', value: 'sailfin' },
-    { label: 'Saurian', value: 'saurian' },
-    { label: 'Scrat', value: 'scrat' },
-    { label: 'Scute Boar', value: 'scuteboar' },
-    { label: 'Serran', value: 'serran' },
-    { label: 'Scylla', value: 'scylla' },
-    { label: 'Scylla, Giant', value: 'scyllagiant' },
-    { label: 'Siren Creeper', value: 'sirencreeper' },
-    { label: 'Spitter', value: 'spitter' },
-    { label: 'Yeti', value: 'yeti' }
-  ]
 
   function jsonFormat(
     data: Ref<Dictionary[]>
@@ -118,18 +71,15 @@ export function useNpcData() {
     })
   }
 
-  const jsonFormatAttributes = jsonFormat(ref(attribute.items))
-  const jsonFormatSkills = jsonFormat(ref(skill.items))
-
   function addAttribute() {
-    form.attributes[attribute.name] = attribute.value
-    attribute.items.push({ name: attribute.name, value: attribute.value })
-    attribute.name = ''
-    attribute.value = ''
+    form.attributes[attributes.name] = attributes.value
+    attributes.items?.push({ name: attributes.name, value: attributes.value })
+    attributes.name = ''
+    attributes.value = ''
   }
 
-  const updateAttribute = (index: number): void => {
-    const updatedAttribute = attribute.items[index]
+  function updateAttribute(index: number): void {
+    const updatedAttribute = attributes.items && attributes.items[index]
 
     if (updatedAttribute) {
       updatedAttribute.name = updatedAttribute.name.trim()
@@ -137,19 +87,19 @@ export function useNpcData() {
     }
   }
 
-  const deleteAttribute = (index: number): void => {
-    attribute.items.splice(index, 1)
+  function deleteAttribute(index: number): void {
+    attributes.items?.splice(index, 1)
   }
 
   function addSkill() {
-    form.skills[skill.name] = skill.value
-    skill.items.push({ name: skill.name, value: skill.value })
-    skill.name = ''
-    skill.value = ''
+    form.skills[skills.name] = skills.value
+    skills.items?.push({ name: skills.name, value: skills.value })
+    skills.name = ''
+    skills.value = ''
   }
 
-  const updateSkill = (index: number): void => {
-    const updatedSkill = skill.items[index]
+  function updateSkill(index: number): void {
+    const updatedSkill = skills.items && skills.items[index]
 
     if (updatedSkill) {
       updatedSkill.name = updatedSkill.name.trim()
@@ -157,9 +107,14 @@ export function useNpcData() {
     }
   }
 
-  const deleteSkill = (index: number): void => {
-    skill.items.splice(index, 1)
+  function deleteSkill(index: number): void {
+    skills.items?.splice(index, 1)
   }
+
+  const jsonFormatAttributes = jsonFormat(
+    ref<Dictionary[]>(attributes.items || [])
+  )
+  const jsonFormatSkills = jsonFormat(ref<Dictionary[]>(skills.items || []))
 
   const create = async () => {
     if (
@@ -177,6 +132,13 @@ export function useNpcData() {
       error.value = 'Please fill in all required fields.'
       return
     }
+
+    const discord_id = authStore.discord_id
+    if (!discord_id) {
+      error.value = 'Invalid Discord User ID.'
+    }
+
+    form.discordID = discord_id
 
     const jsonFields = ['damage']
     const parsedFields: Partial<NpcCreate> = {}
@@ -212,17 +174,17 @@ export function useNpcData() {
   return {
     addAttribute,
     addSkill,
-    attribute,
+    attributes,
     create,
     deleteAttribute,
     deleteSkill,
     error,
-    factions,
+    factions: Object.values(Faction),
     form,
-    genders,
+    genders: Object.values(Gender),
     isLoading,
-    races,
-    skill,
+    races: Object.values(Race),
+    skills,
     updateAttribute,
     updateSkill
   }

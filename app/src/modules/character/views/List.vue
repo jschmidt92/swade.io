@@ -10,7 +10,7 @@ const characters = ref<
     name: string
     race: string
     gender: string
-    damage: string | Record<string, any>
+    damage: string | Record<string, number | string>
   }[]
 >([])
 

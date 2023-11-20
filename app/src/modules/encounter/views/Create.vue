@@ -1,41 +1,9 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
 import BaseInput from '@/components/BaseInput.vue'
-import { useEncounterStore, type EncounterCreate } from '../encounter.store'
 import BaseTextBox from '@/components/BaseTextBox.vue'
+import { useEncounterData } from '../encounter.utils'
 
-const form = reactive<EncounterCreate>({
-  name: '',
-  notes: '',
-  body: ''
-})
-
-const encounterStore = useEncounterStore()
-const error = ref<string | null>(null)
-const isLoading = ref(false)
-
-const create = async () => {
-  if (!form.name) {
-    error.value = 'Please fill in all required fields.'
-    return
-  }
-
-  const { ...otherFields } = form
-  console.log(form)
-
-  const encounterData: EncounterCreate = {
-    ...otherFields
-  } as EncounterCreate
-
-  isLoading.value = true
-  try {
-    await encounterStore.createEncounter(encounterData)
-  } catch (e) {
-    error.value = 'An error occurred while creating the encounter.'
-  } finally {
-    isLoading.value = false
-  }
-}
+const { create, error, form } = useEncounterData()
 </script>
 
 <template>

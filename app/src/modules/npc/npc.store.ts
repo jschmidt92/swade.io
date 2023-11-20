@@ -1,154 +1,17 @@
 import { defineStore } from 'pinia'
-
-export interface NpcCreate {
-  [key: string]: any
-  name: string
-  race: string
-  gender: string
-  charisma: number
-  pace: number
-  parry: number
-  toughness: number
-  attributes: string | Record<string, any>
-  skills: string | Record<string, any>
-  gear?: string | any[]
-  hindrances: string
-  edges: string
-  cyberware?: string | Cyberware[]
-  powers?: string | Power[]
-  weapons?: string | NestedWeapon[]
-  damage: string | Record<string, any>
-  ammo: number
-  money: number
-}
-
-export interface NpcsList {
-  id: number
-  name: string
-  race: string
-  gender: string
-  damage: string | Record<string, any>
-}
-
-export interface NpcUpdate {
-  id?: number
-  name?: string
-  race?: string
-  gender?: string
-  charisma?: number
-  pace?: number
-  parry?: number
-  toughness?: number
-  attributes?: string | Record<string, any>
-  skills?: string | Record<string, any>
-  gear?: string | NestedGear[]
-  hindrances?: string
-  edges?: string
-  cyberware?: string | Cyberware[]
-  powers?: string | Power[]
-  weapons?: string | NestedWeapon[]
-  damage?: string | Record<string, any>
-  ammo?: number
-  money?: number
-}
-
-export interface NpcView {
-  name: string
-  race: string
-  gender: string
-  charisma: number
-  pace: number
-  parry: number
-  toughness: number
-  attributes: string | Record<string, any>
-  skills: string | Record<string, any>
-  gear: NestedGear[]
-  hindrances: string
-  edges: string
-  cyberware: Cyberware[]
-  powers: Power[]
-  weapons: NestedWeapon[]
-  damage: Record<string, any>
-  ammo: number
-  money: number
-}
-
-export interface Cyberware {
-  id: number
-  name: string
-  strain: number
-  effect: string
-  price: number
-  notes: string
-}
-
-export interface Gear {
-  id: number
-  name: string
-  min_str: string
-  wt: number
-  cost: number
-  notes: string
-}
-
-export interface Power {
-  id: number
-  name: string
-  pp: string
-  range: string
-  duration: string
-  effect: string
-  notes: string
-}
-
-export interface NestedGear {
-  gear: {
-    id: number
-    name: string
-    min_str: string
-    wt: number
-    cost: number
-    notes: string
-  }
-  quantity: number
-}
-
-export interface NestedWeapon {
-  weapon: {
-    id: number
-    name: string
-    range: string
-    damage: string
-    rof: number
-    shots: number
-    min_str: string
-    wt: number
-    cost: number
-    notes: string
-  }
-  quantity: number
-}
-
-export interface Weapon {
-  id: number
-  name: string
-  range: string
-  damage: string
-  rof: number
-  shots: number
-  min_str: string
-  wt: number
-  cost: number
-  notes: string
-}
+import {
+  NpcCreate,
+  NpcList,
+  NpcUpdate,
+  NpcView
+} from './npc.interfaces'
 
 const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
-// const BASE_URL = 'http://swade.api:4000'
 
 export const useNpcStore = defineStore('npc', {
   state: () => ({
     npc: null as NpcView | null,
-    npcs: [] as NpcsList[],
+    npcs: [] as NpcList[],
     error: null as string | null
   }),
   actions: {

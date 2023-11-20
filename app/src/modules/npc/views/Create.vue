@@ -2,20 +2,22 @@
 import BaseInput from '@/components/BaseInput.vue'
 import BaseListBox from '@/components/BaseListBox.vue'
 import { useNpcData } from '../npc.utils'
+import { Gender, Faction, Race } from '../npc.interfaces'
+import { convertEnumToArray } from '../npc.utils'
 
+const genders = convertEnumToArray(Gender)
+const factions = convertEnumToArray(Faction)
+const races = convertEnumToArray(Race)
 const {
   addAttribute,
   addSkill,
-  attribute,
+  attributes,
   create,
   deleteAttribute,
   deleteSkill,
   error,
-  factions,
   form,
-  genders,
-  races,
-  skill,
+  skills,
   updateAttribute,
   updateSkill
 } = useNpcData()
@@ -64,12 +66,12 @@ const {
       <div class="mb-3">
         <div class="input-group">
           <BaseInput
-            v-model="attribute.name"
+            v-model="attributes.name"
             label="Attribute Name:"
             type="text"
           />
           <BaseInput
-            v-model="attribute.value"
+            v-model="attributes.value"
             label="Attribute Value:"
             type="text"
           />
@@ -81,12 +83,12 @@ const {
             Add
           </button>
         </div>
-        <div v-if="attribute.items.length">
+        <div v-if="attributes.items?.length">
           <ul class="list-group">
             <li
               class="list-group-item border-light"
               style="background: none !important"
-              v-for="(item, index) in attribute.items"
+              v-for="(item, index) in attributes.items"
               :key="index"
             >
               <div class="input-group">
@@ -127,8 +129,8 @@ const {
 
       <div class="mb-3">
         <div class="input-group">
-          <BaseInput v-model="skill.name" label="Skill Name:" type="text" />
-          <BaseInput v-model="skill.value" label="Skill Value:" type="text" />
+          <BaseInput v-model="skills.name" label="Skill Name:" type="text" />
+          <BaseInput v-model="skills.value" label="Skill Value:" type="text" />
           <button
             type="button"
             class="btn btn-outline-light"
@@ -137,12 +139,12 @@ const {
             Add
           </button>
         </div>
-        <div v-if="skill.items.length">
+        <div v-if="skills.items?.length">
           <ul class="list-group">
             <li
               class="list-group-item border-light"
               style="background: none !important"
-              v-for="(item, index) in skill.items"
+              v-for="(item, index) in skills.items"
               :key="index"
             >
               <div class="input-group">

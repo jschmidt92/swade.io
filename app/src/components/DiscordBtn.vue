@@ -20,10 +20,10 @@
           >
           <template v-if="is_gm">
             <li><hr class="dropdown-divider border-light" /></li>
-            <router-link class="dropdown-item" to="/Npcs"
+            <router-link class="dropdown-item" to="/npcs"
               >View NPCs</router-link
             >
-            <router-link class="dropdown-item" to="/Npcs/create"
+            <router-link class="dropdown-item" to="/npcs/create"
               >Create NPC</router-link
             >
             <li><hr class="dropdown-divider border-light" /></li>
