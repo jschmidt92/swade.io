@@ -40,9 +40,9 @@ const {
         type="text"
         class="mb-3"
       />
-      <BaseListBox v-model="form.race" :options="races" class="mb-3" />
-      <BaseListBox v-model="form.gender" :options="genders" class="mb-3" />
-      <BaseListBox v-model="form.faction" :options="factions" class="mb-3" />
+      <BaseListBox v-model="form.gender" placeholder="Select a Gender" :options="genders" class="mb-3" />
+      <BaseListBox v-model="form.race" placeholder="Select a Race" :options="races" class="mb-3" />
+      <BaseListBox v-model="form.faction" placeholder="Select a Faction" :options="factions" class="mb-3" />
       <BaseInput
         v-model="form.charisma"
         label="Charisma:"
