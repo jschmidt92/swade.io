@@ -1,11 +1,12 @@
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
 import { useEventStore } from './event.store'
+import { useSocketIO } from '@/plugins/socket.io'
 import { EventAttendance } from './event.interfaces'
 
 export const useEventData = () => {
-  const eventStore = useEventStore()
   const authStore = useAuthStore()
+  const eventStore = useEventStore()
   const events = ref<
     {
       id: number
@@ -16,6 +17,13 @@ export const useEventData = () => {
     }[]
   >([])
 
+  const { socket } = useSocketIO()
+
+  socket.on('attendanceUpdateHandled', (message: string) => {
+    console.log(message)
+    refreshEvents()
+  })
+
   const handleAttendanceUpdate = async (
     event_id: number,
     attendance: boolean
@@ -25,7 +33,9 @@ export const useEventData = () => {
       discord_id: authStore.discord_id,
       attendance: attendance
     })
-    refreshEvents()
+    
+    const eventData = {userId: authStore.discord_id, status: attendance}
+    socket.emit('attendanceUpdate', eventData)
   }
 
   const refreshEvents = async () => {
@@ -67,10 +77,11 @@ export const useEventData = () => {
   })
 
   return {
-    events,
-    handleAttendanceUpdate,
     countAttendees,
+    events,
+    formatDate,
+    handleAttendanceUpdate,
     totalAttendees,
-    formatDate
+    refreshEvents
   }
 }

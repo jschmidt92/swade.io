@@ -3,7 +3,14 @@ import { useEventData } from '../event.utils'
 import { useAuthStore } from '@/stores/auth.store'
 
 const authStore = useAuthStore()
-const { events, handleAttendanceUpdate, countAttendees, totalAttendees, formatDate } = useEventData()
+const {
+  events,
+  handleAttendanceUpdate,
+  countAttendees,
+  totalAttendees,
+  formatDate
+} = useEventData()
+
 </script>
 
 <template>
@@ -45,7 +52,10 @@ const { events, handleAttendanceUpdate, countAttendees, totalAttendees, formatDa
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header border-light">
-                        <h1 class="modal-title fs-5" :id="`eventModalLabel${event.id}`">
+                        <h1
+                          class="modal-title fs-5"
+                          :id="`eventModalLabel${event.id}`"
+                        >
                           Verify Attendance
                         </h1>
                         <button
@@ -53,7 +63,12 @@ const { events, handleAttendanceUpdate, countAttendees, totalAttendees, formatDa
                           class="btn btn-outline-secondary border-light"
                           data-bs-dismiss="modal"
                           aria-label="Close"
-                        ><font-awesome-icon icon="fa-solid fa-xmark" size="lg" /></button>
+                        >
+                          <font-awesome-icon
+                            icon="fa-solid fa-xmark"
+                            size="lg"
+                          />
+                        </button>
                       </div>
                       <div class="modal-body text-center">
                         <button

@@ -11,11 +11,13 @@ lerna-debug.log*
 .vscode
 __pycache__
 node_modules
+certificates
 dist
 dist-ssr
 svg
 *.local
 *.env
+*.pem
 
 # Editor directories and files
 .vscode/*
