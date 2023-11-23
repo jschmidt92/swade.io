@@ -1,4 +1,7 @@
-import { NestedGear, NestedWeapon } from '@/modules/character/character.interfaces'
+import {
+  NestedGear,
+  NestedWeapon
+} from '@/modules/character/character.interfaces'
 
 interface Character {
   id: number

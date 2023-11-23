@@ -94,7 +94,7 @@ onMounted(async () => {
                 class="d-flex flex-column text-center"
               >
                 <div
-                  :class="getDamageTypeClass(key as string)"
+                  :class="getDamageTypeClass(key as unknown as string)"
                   style="width: 55px; height: 55px"
                 >
                   {{ value }}

@@ -28,7 +28,9 @@ export const usePlayerData = (): {
   }
 
   const getPlayerCharacters = async () => {
-    characters.value = await characterStore.getPlayerCharacters(discord_id) as Character[]
+    characters.value = (await characterStore.getPlayerCharacters(
+      discord_id
+    )) as Character[]
   }
 
   const getPlayerInventory = (): { name: string; quantity: number }[] => {

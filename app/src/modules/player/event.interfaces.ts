@@ -11,6 +11,8 @@ interface Event {
   date: Date
   details: string
   attendance: Record<string, any>
+  attending?: number
+  total_players?: number
 }
 
 interface EventAttendance {

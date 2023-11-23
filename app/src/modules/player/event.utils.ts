@@ -1,28 +1,21 @@
-import { onMounted, ref } from 'vue'
+import { getCurrentInstance, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
 import { useEventStore } from './event.store'
-import { useSocketIO } from '@/plugins/socket.io'
-import { EventAttendance } from './event.interfaces'
+import { Event, EventAttendance } from './event.interfaces'
 
 export const useEventData = () => {
+  const socket = getCurrentInstance()
   const authStore = useAuthStore()
   const eventStore = useEventStore()
-  const events = ref<
-    {
-      id: number
-      title: string
-      date: Date
-      details: string
-      attendance: Record<string, any>
-    }[]
-  >([])
+  const events = ref<Event[]>([])
 
-  const { socket } = useSocketIO()
-
-  socket.on('attendanceUpdateHandled', (message: string) => {
-    console.log(message)
-    refreshEvents()
-  })
+  socket?.appContext.config.globalProperties.$onSocketEvent(
+    'attendanceUpdateHandled',
+    (message: string) => {
+      console.log(message)
+      refreshEvents()
+    }
+  )
 
   const handleAttendanceUpdate = async (
     event_id: number,
@@ -33,21 +26,41 @@ export const useEventData = () => {
       discord_id: authStore.discord_id,
       attendance: attendance
     })
-    
-    const eventData = {userId: authStore.discord_id, status: attendance}
-    socket.emit('attendanceUpdate', eventData)
+
+    const eventData = {
+      event_id: event_id,
+      discord_id: authStore.discord_id,
+      status: attendance
+    }
+    socket?.appContext.config.globalProperties.$emitSocketEvent(
+      'attendanceUpdate',
+      eventData
+    )
   }
 
   const refreshEvents = async () => {
     await eventStore.getUpcomingEvents()
-    events.value = eventStore.events
+
+    events.value = eventStore.events.map((eventItem: Event) => ({
+      ...eventItem,
+      attending: countAttendees(eventItem.attendance),
+      total_players: totalAttendees(eventItem.attendance)
+    }))
+
+    events.value.forEach((event) => {
+      const eventAttendance: EventAttendance = {
+        event_id: event.id,
+        discord_id: authStore.discord_id
+      }
+      eventStore.getAttendance(eventAttendance)
+    })
   }
 
-  const countAttendees = (attendance: Record<string, any>) => {
+  const countAttendees = (attendance: Record<string, boolean>): number => {
     return Object.values(attendance).filter((value) => value === true).length
   }
 
-  const totalAttendees = (attendance: Record<string, any>) => {
+  const totalAttendees = (attendance: Record<string, any>): number => {
     return Object.keys(attendance).length
   }
 
@@ -65,15 +78,7 @@ export const useEventData = () => {
   }
 
   onMounted(async () => {
-    await eventStore.getUpcomingEvents()
-    events.value = eventStore.events
-    events.value.forEach((item) => {
-      const event: EventAttendance = {
-        event_id: item.id,
-        discord_id: authStore.discord_id
-      }
-      eventStore.getAttendance(event)
-    })
+    await refreshEvents()
   })
 
   return {
@@ -81,7 +86,6 @@ export const useEventData = () => {
     events,
     formatDate,
     handleAttendanceUpdate,
-    totalAttendees,
-    refreshEvents
+    totalAttendees
   }
 }

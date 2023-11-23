@@ -1,4 +1,3 @@
-// src/sockets/socketManager.ts
 import { Server, Socket } from 'socket.io'
 import EventController from '../controllers/eventController'
 
@@ -12,16 +11,14 @@ class SocketManager {
 
   private setupEventListeners() {
     this.io.on('connection', (socket: Socket) => {
-      // Example: Handle 'attendanceUpdate' event from the client
       socket.on(
         'attendanceUpdate',
-        (eventData: { userId: string; status: string }) => {
+        (eventData: { event_id: string; discord_id: string; status: string }) => {
           const result = EventController.handleAttendanceUpdate(eventData)
-          socket.emit('attendanceUpdateHandled', result)
+          this.io.emit('attendanceUpdateHandled', result)
         }
       )
 
-      // Example: Handle 'itemTransaction' event from the client
       socket.on(
         'itemTransaction',
         (eventData: { userId: string; action: string; item: string }) => {
@@ -30,7 +27,6 @@ class SocketManager {
         }
       )
 
-      // Example: Handle 'paymentReceived' event from the client
       socket.on(
         'paymentReceived',
         (eventData: { userId: string; amount: number }) => {
@@ -39,7 +35,6 @@ class SocketManager {
         }
       )
 
-      // Example: Handle 'damageTaken' event from the client
       socket.on(
         'damageTaken',
         (eventData: { userId: string; damageAmount: number }) => {
@@ -47,8 +42,6 @@ class SocketManager {
           socket.emit('damageTakenHandled', result)
         }
       )
-
-      // You can add more event listeners here based on your application's needs
     })
   }
 }

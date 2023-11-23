@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
-import { Event, EventAttendance, EventCreate, EventUpdateAttendance } from './event.interfaces'
+import {
+  Event,
+  EventAttendance,
+  EventCreate,
+  EventUpdateAttendance
+} from './event.interfaces'
 
 const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
 
@@ -17,7 +22,9 @@ export const useEventStore = defineStore('player', {
           throw Error('No data available')
         }
         this.events = await data.json()
-        this.events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        this.events.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        )
         return this.events
       } catch (err: any) {
         this.error = err.message
@@ -56,9 +63,7 @@ export const useEventStore = defineStore('player', {
           throw Error('Could not update attendance')
         }
         const updatedEvent = await response.json()
-        const index = this.events.findIndex(
-          (e) => e.id === updatedEvent.id
-        )
+        const index = this.events.findIndex((e) => e.id === updatedEvent.id)
         if (index !== -1) {
           this.events.splice(index, 1, updatedEvent)
         }

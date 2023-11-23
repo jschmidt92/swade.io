@@ -23,7 +23,7 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((_to, _from, next) => {
   const authStore = useAuthStore()
   const token = localStorage.getItem('token')
   const discord_id = localStorage.getItem('discord_id')

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import SocketIOPlugin from '@/plugins/socket.io'
 
 import App from './App.vue'
 import router from './router'
@@ -19,5 +20,6 @@ library.add(faDiscord, faEye, faPenToSquare, faPlus, faTrash, faThumbsUp, faThum
 
 app.use(pinia)
 app.use(router)
+app.use(SocketIOPlugin, { connectionUrl: 'https://websocket.innovativedevsolutions.org' })
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.mount('#app')

@@ -3,14 +3,7 @@ import { useEventData } from '../event.utils'
 import { useAuthStore } from '@/stores/auth.store'
 
 const authStore = useAuthStore()
-const {
-  events,
-  handleAttendanceUpdate,
-  countAttendees,
-  totalAttendees,
-  formatDate
-} = useEventData()
-
+const { events, formatDate, handleAttendanceUpdate } = useEventData()
 </script>
 
 <template>
@@ -31,8 +24,8 @@ const {
           <tbody>
             <tr v-for="event in events" :key="event.id">
               <td>
-                {{ countAttendees(event.attendance) }} of
-                {{ totalAttendees(event.attendance) }}
+                {{ event.attending }} of
+                {{ event.total_players }}
               </td>
               <td>
                 <router-link
