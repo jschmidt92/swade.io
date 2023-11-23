@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import fs from 'fs'
-import { Server as SocketServer, Socket } from 'socket.io'
+import { Server, Socket } from 'socket.io'
 import { createServer } from 'https'
 
 import eventRoutes from './routes/eventRoutes'
@@ -16,7 +16,7 @@ const wssOptions = {
 
 const wss = createServer(wssOptions, app)
 
-const io = new SocketServer(wss, {
+const io = new Server(wss, {
   cors: { origin: '*', methods: ['GET', 'POST'], allowedHeaders: '*' }
 })
 
