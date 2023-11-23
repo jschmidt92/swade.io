@@ -1,15 +1,22 @@
 import express, { Request, Response } from 'express'
-import { Server, Socket } from 'socket.io'
-import http from 'http'
+import fs from 'fs'
+import { Server as SocketServer, Socket } from 'socket.io'
+import { createServer } from 'https'
 
 import eventRoutes from './routes/eventRoutes'
 import SocketManager from './sockets/socketManager'
 
 const app = express()
 const port = process.env.PORT || 3000
-const server = http.createServer(app)
 
-const io = new Server(server, {
+const wssOptions = {
+  key: fs.readFileSync('certificates/innovativedevsolutions.org-key.pem'),
+  cert: fs.readFileSync('certificates/innovativedevsolutions.org-cert.pem')
+}
+
+const wss = createServer(wssOptions, app)
+
+const io = new SocketServer(wss, {
   cors: { origin: '*', methods: ['GET', 'POST'], allowedHeaders: '*' }
 })
 
@@ -18,12 +25,11 @@ app.use('/events', eventRoutes)
 new SocketManager(io)
 
 app.get('/', (req: Request, res: Response) => {
-  res.send({ message: 'Welcome to Swade Socket.IO!' })
+  res.send({ message: 'Welcome to Socket.IO over WSS!' })
 })
 
 io.on('connection', (socket: Socket) => {
   console.log('Client connected', socket.id)
-  socket.send(`Welcome to Swade Socket.IO!`)
 
   socket.on('message', (message: string) => {
     console.log(`Received message: ${message}`)
@@ -34,6 +40,6 @@ io.on('connection', (socket: Socket) => {
   })
 })
 
-server.listen(port, () => {
-  console.log(`⚡️ [server]: is listening on port ${port}`)
+wss.listen(port, () => {
+  console.log(`Socket.IO server listening on port ${port}`)
 })
