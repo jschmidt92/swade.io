@@ -32,7 +32,8 @@ io.on('connection', (socket: Socket) => {
   console.log('Client connected', socket.id)
 
   socket.on('message', (message: string) => {
-    console.log(`Received message: ${message}`)
+    JSON.stringify(message)
+    console.log(`Received message:`, message)
   })
 
   socket.on('disconnect', () => {

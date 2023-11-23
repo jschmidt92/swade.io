@@ -13,7 +13,7 @@ class SocketManager {
     this.io.on('connection', (socket: Socket) => {
       socket.on(
         'attendanceUpdate',
-        (eventData: { event_id: string; discord_id: string; status: string }) => {
+        (eventData: { event_id: string; discord_id: string; status: boolean }) => {
           const result = EventController.handleAttendanceUpdate(eventData)
           this.io.emit('attendanceUpdateHandled', result)
         }

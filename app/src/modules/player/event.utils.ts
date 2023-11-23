@@ -27,8 +27,9 @@ export const useEventData = () => {
       attendance: attendance
     })
 
+    const event = await eventStore.getEventById(event_id)
     const eventData = {
-      event_id: event_id,
+      event_id: event?.title,
       discord_id: authStore.discord_id,
       status: attendance
     }

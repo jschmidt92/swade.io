@@ -15,6 +15,19 @@ export const useEventStore = defineStore('player', {
     error: null as string | null
   }),
   actions: {
+    async getEventById(id: number) {
+      try {
+        let data = await fetch(`${BASE_URL}/events/${id}/`)
+        if (!data.ok) {
+          throw Error('No data available')
+        }
+        this.event = await data.json()
+        return this.event
+      } catch (err: any) {
+        this.error = err.message
+        console.log(this.error)
+      }
+    },
     async getUpcomingEvents() {
       try {
         let data = await fetch(`${BASE_URL}/events/?limit=3&sort=-date`)

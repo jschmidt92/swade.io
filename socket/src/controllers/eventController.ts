@@ -1,7 +1,9 @@
 class EventController {
-  handleAttendanceUpdate(eventData: { event_id: string; discord_id: string; status: string }) {
+  handleAttendanceUpdate(eventData: { event_id: string; discord_id: string; status: boolean }) {
+    const isAttending = eventData.status === true
+    const attendance = isAttending ? 'Attending' : 'Not Attending'
     console.log(
-      `User ${eventData.discord_id} updated attendance status to ${eventData.status} for event ${eventData.event_id}`
+      `User ${eventData.discord_id} updated attendance status to ${attendance} for ${eventData.event_id}`
     )
 
     return { message: 'Attendance updated successfully' }
