@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import DiceRoller from '@/components/DiceRoller.vue'
 import banner from '@/assets/banner.jpg'
 import BaseEntityCard from '../components/BaseEntityCard.vue'
@@ -7,9 +7,14 @@ import { useEncounterStore } from '../encounter.store'
 import { useEncounterData } from '../encounter.utils'
 
 const props = defineProps({ id: String })
-const webhook = 'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
+const webhook =
+  'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
 const encounterStore = useEncounterStore()
-const { getFaction } = useEncounterData()
+
+const { getFaction, sortedCharacters, sortedNpcs } = useEncounterData()
+const combinedEntities = computed(() => {
+  return sortedCharacters.value.concat(sortedNpcs.value)
+})
 
 onMounted(async () => {
   await encounterStore.getEncounter(props.id)
@@ -40,7 +45,7 @@ onMounted(async () => {
       <div class="col-md-6">
         <div class="row">
           <div class="col-md-12 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm mb-3">
               <div
                 class="card-header card-title text-uppercase bg-dark-subtle mb-1"
               >
@@ -70,24 +75,23 @@ onMounted(async () => {
                 In Combat
               </div>
             </div>
-            <template v-for="character in encounterStore.encounter.characters">
-              <template v-if="character.damage.Inc === 'No'">
-                <BaseEntityCard
-                  :name="character.name"
-                  class="bg-info"
-                  :damage="character.damage"
-                />
-              </template>
+            <template
+              v-for="entity in combinedEntities"
+              :key="entity.name"
+            >
+              <BaseEntityCard
+                :name="entity.name"
+                :class="entity.type === 'character' ? 'bg-info' : getFaction(entity.faction)"
+                :damage="entity.damage"
+              />
             </template>
-            <template v-for="npc in encounterStore.encounter.npcs">
-              <template v-if="npc.damage.Inc === 'No'">
-                <BaseEntityCard
-                  :name="npc.name"
-                  :class="getFaction(npc.faction)"
-                  :damage="npc.damage"
-                />
-              </template>
-            </template>
+            <!-- <template v-for="npc in sortedNpcs" :key="npc.name">
+              <BaseEntityCard
+                :name="npc.name"
+                :class="getFaction(npc.faction)"
+                :damage="npc.damage"
+              />
+            </template> -->
           </div>
           <div class="col-md-6">
             <div class="card shadow-sm mb-3">

@@ -1,11 +1,14 @@
 from collections import deque
+import json
 from config import MAIN_CHANNEL_ID
 from dataclasses import dataclass, field
 from discord.ext import commands
 from typing import List, Tuple, Dict
 from utils.encounter_utils import *
+import asyncio
 import discord
 import random
+import socketio
 
 
 @dataclass
@@ -96,12 +99,39 @@ class NoMoreCardsError(Exception):
     pass
 
 
+class WebSocketClient:
+    def __init__(self, server_url):
+        self.sio = socketio.AsyncClient(ssl_verify=False)
+        self.server_url = server_url
+
+        @self.sio.event
+        async def connect():
+            print("Connected to WebSocket Server")
+
+        @self.sio.event
+        async def message(data):
+            print(f"Received message from server: {data}")
+
+        asyncio.ensure_future(self.sio.connect(self.server_url))
+
+    async def send_initiative_order(self, encounter_id, initiative_order):
+        data = {"encounter_id": encounter_id, "initiative_order": initiative_order}
+
+        print(f"Encounter ID: {encounter_id}, Initiative Order: {initiative_order}")
+
+        await self.sio.emit("initiativeDealt", data)
+
+    async def initiative_turn(self):
+        await self.sio.emit("initiativeNextTurn")
+
+
 class deck_of_cards(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.deck = Deck()
         self.current_turn = 0
         self.initiative_order = []
+        self.websocket_client = WebSocketClient("https://135.135.196.140:3000")
 
     async def cog_check(self, ctx):
         return (
@@ -155,11 +185,17 @@ class deck_of_cards(commands.Cog):
 
         self.deck.players.sort(key=lambda player: player.card_values[-1], reverse=True)
 
+        initiative_order = [player.name for player in self.deck.players]
+
         embed = self.create_initiative_embed()
         await ctx.send(embed=embed)
 
         current_player_embed = self.create_current_player_embed(self.deck.players[0])
         await ctx.send(embed=current_player_embed)
+
+        await self.websocket_client.send_initiative_order(
+            encounter_id, initiative_order
+        )
 
     @commands.command(aliases=["ei", "end"])
     async def end_initiative(self, ctx):
@@ -277,6 +313,8 @@ class deck_of_cards(commands.Cog):
         current_player = self.deck.players[self.current_turn]
         current_player_embed = self.create_current_player_embed(current_player)
         await ctx.send(embed=current_player_embed)
+
+        await self.websocket_client.initiative_turn()
 
     def create_current_player_embed(self, player):
         damage_string = ", ".join(f"{k}: **{v}**" for k, v in player.damage.items())

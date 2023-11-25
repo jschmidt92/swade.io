@@ -3,5 +3,6 @@ discord
 DiscordUtils
 PyNaCl
 python-dotenv
-yt-dlp
+python-socketio[asyncio_client]
 requests
+yt-dlp

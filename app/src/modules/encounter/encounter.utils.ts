@@ -1,6 +1,6 @@
-import { reactive, ref } from 'vue'
+import { getCurrentInstance, reactive, ref } from 'vue'
 import { useEncounterStore } from './encounter.store'
-import { EncounterCreate } from './encounter.interfaces'
+import { EncounterCreate, EncounterData } from './encounter.interfaces'
 
 export function useEncounterData() {
   const form = reactive<EncounterCreate>({
@@ -9,9 +9,60 @@ export function useEncounterData() {
     body: ''
   })
 
+  const socket = getCurrentInstance()
   const encounterStore = useEncounterStore()
   const error = ref<string | null>(null)
   const isLoading = ref(false)
+  const sortedCharacters = ref<any>([])
+  const sortedNpcs = ref<any>([])
+
+  socket?.appContext.config.globalProperties.$onSocketEvent(
+    'initiativeUpdateHandled',
+    (data: EncounterData) => {
+      console.log(data)
+      sortCards(data)
+    }
+  )
+
+  socket?.appContext.config.globalProperties.$onSocketEvent('initiativeTurnHandled', () => {
+      rotateEntities()
+    }
+  )
+
+  const sortCards = (data: EncounterData) => {
+    const encounter = encounterStore.encounter
+
+    if (encounter) {
+      try {
+        const initiativeOrder = data.initiative_order || []
+
+        if (!Array.isArray(initiativeOrder)) {
+          console.error('Initiative order is not an array:', initiativeOrder)
+          return
+        }
+
+        console.log('Initiative Order:', initiativeOrder)
+        console.log(
+          'Character Names:',
+          encounter.characters.map((char) => char.name)
+        )
+
+        const allEntities = [...encounter.characters, ...encounter.npcs]
+
+        const sortedEntities = allEntities
+          .filter((entity) => entity.damage?.Inc === 'No' && entity.name)
+          .sort((a, b) => {
+            const indexA = a.name ? initiativeOrder.indexOf(a.name) : -1
+            const indexB = b.name ? initiativeOrder.indexOf(b.name) : -1
+            return indexA - indexB
+          })
+
+        sortedCharacters.value = sortedEntities
+      } catch (error) {
+        console.error('Error parsing initiative_order:', error)
+      }
+    }
+  }
 
   const create = async () => {
     if (!form.name) {
@@ -46,14 +97,27 @@ export function useEncounterData() {
       case 'enemy':
         return 'bg-danger'
       default:
-        return 'bg-secondary'
+        return 'bg-info'
     }
+  }
+
+  const rotateEntities = () => {
+    if (sortedCharacters.value.length < 2) {
+      return
+    }
+
+    const firstEntity = sortedCharacters.value.shift()
+    sortedCharacters.value.push(firstEntity)
   }
 
   return {
     create,
     error,
     form,
-    getFaction
+    getFaction,
+    rotateEntities,
+    sortCards,
+    sortedCharacters,
+    sortedNpcs
   }
 }

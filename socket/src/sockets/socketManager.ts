@@ -1,5 +1,6 @@
 import { Server, Socket } from 'socket.io'
 import EventController from '../controllers/eventController'
+import { Attendance } from '../interfaces/attendance.interface'
 
 class SocketManager {
   private io: Server
@@ -11,37 +12,28 @@ class SocketManager {
 
   private setupEventListeners() {
     this.io.on('connection', (socket: Socket) => {
-      socket.on(
-        'attendanceUpdate',
-        (eventData: { event_id: string; discord_id: string; status: boolean }) => {
-          const result = EventController.handleAttendanceUpdate(eventData)
-          this.io.emit('attendanceUpdateHandled', result)
+      socket.on('attendanceUpdate', (data: Attendance) => {
+          const message = EventController.handleAttendanceUpdate(data)
+
+          console.log('Attendance Update Handled')
+
+          this.io.emit('attendanceUpdateHandled', message)
         }
       )
 
-      socket.on(
-        'itemTransaction',
-        (eventData: { userId: string; action: string; item: string }) => {
-          const result = EventController.handleItemTransaction(eventData)
-          socket.emit('itemTransactionHandled', result)
-        }
-      )
+      socket.on('initiativeDealt', (data: string) => {
+        const message = EventController.handleInitiativeUpdate(data)
 
-      socket.on(
-        'paymentReceived',
-        (eventData: { userId: string; amount: number }) => {
-          const result = EventController.handlePaymentReceived(eventData)
-          socket.emit('paymentReceivedHandled', result)
-        }
-      )
+        console.log('Initiative Update Handled')
 
-      socket.on(
-        'damageTaken',
-        (eventData: { userId: string; damageAmount: number }) => {
-          const result = EventController.handleDamageTaken(eventData)
-          socket.emit('damageTakenHandled', result)
-        }
-      )
+        this.io.emit('initiativeUpdateHandled', message)
+      })
+
+      socket.on('initiativeNextTurn', () => {
+        console.log('Initiative Turn Handled')
+
+        this.io.emit('initiativeTurnHandled')
+      })
     })
   }
 }

@@ -23,6 +23,12 @@ interface EncounterView {
   body: string
   characters: any[]
   npcs: any[]
+  initiative_order?: string[]
 }
 
-export type { EncounterCreate, EncountersList, EncounterUpdate, EncounterView }
+interface EncounterData {
+  encounter_id: number;
+  initiative_order: string[];
+}
+
+export type { EncounterCreate, EncounterData, EncountersList, EncounterUpdate, EncounterView }
