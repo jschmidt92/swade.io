@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { EncounterCreate, EncountersList, EncounterUpdate, EncounterView } from './encounter.interfaces'
+import { EncounterCreate, EncounterEntity, EncountersList, EncounterUpdate, EncounterView } from './encounter.interfaces'
 
 const BASE_URL = 'https://apiv1.innovativedevsolutions.org'
 // const BASE_URL = 'http://swade.api:4000'
@@ -8,7 +8,8 @@ export const useEncounterStore = defineStore('encounter', {
   state: () => ({
     encounter: null as EncounterView | null,
     encounters: [] as EncountersList[],
-    error: null as string | null
+    error: null as string | null,
+    sortedCharacters: [] as EncounterEntity[] | null
   }),
   actions: {
     async createEncounter(encounter: EncounterCreate) {
@@ -80,6 +81,9 @@ export const useEncounterStore = defineStore('encounter', {
         this.error = err.message
         console.log(this.error)
       }
+    },
+    setCharacterOrder(entities: EncounterEntity[]) {
+      this.sortedCharacters = entities;
     }
   }
 })

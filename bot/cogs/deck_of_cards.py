@@ -104,21 +104,10 @@ class WebSocketClient:
         self.sio = socketio.AsyncClient(ssl_verify=False)
         self.server_url = server_url
 
-        @self.sio.event
-        async def connect():
-            print("Connected to WebSocket Server")
-
-        @self.sio.event
-        async def message(data):
-            print(f"Received message from server: {data}")
-
         asyncio.ensure_future(self.sio.connect(self.server_url))
 
     async def send_initiative_order(self, encounter_id, initiative_order):
         data = {"encounter_id": encounter_id, "initiative_order": initiative_order}
-
-        print(f"Encounter ID: {encounter_id}, Initiative Order: {initiative_order}")
-
         await self.sio.emit("initiativeUpdate", data)
 
     async def initiative_turn(self):

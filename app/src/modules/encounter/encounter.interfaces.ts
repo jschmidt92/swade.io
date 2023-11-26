@@ -31,4 +31,11 @@ interface EncounterData {
   initiative_order: string[];
 }
 
-export type { EncounterCreate, EncounterData, EncountersList, EncounterUpdate, EncounterView }
+interface EncounterEntity {
+  name: string
+  damage: { Inc: string, Wounds: number, Fatigue: number }
+  faction: any
+  type: string
+}
+
+export type { EncounterCreate, EncounterData, EncounterEntity, EncountersList, EncounterUpdate, EncounterView }

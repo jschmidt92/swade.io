@@ -6,13 +6,14 @@ import BaseEntityCard from '../components/BaseEntityCard.vue'
 import { useEncounterStore } from '../encounter.store'
 import { useEncounterData } from '../encounter.utils'
 
+const encounterStore = useEncounterStore()
 const props = defineProps({ id: String })
 const webhook = 'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
-const encounterStore = useEncounterStore()
 
-const { getFaction, sortedCharacters, sortedNpcs } = useEncounterData()
+const { getFaction } = useEncounterData()
+
 const combinedEntities = computed(() => {
-  return sortedCharacters.value.concat(sortedNpcs.value)
+  return encounterStore.sortedCharacters
 })
 
 onMounted(async () => {

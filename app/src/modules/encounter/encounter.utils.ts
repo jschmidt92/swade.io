@@ -14,7 +14,6 @@ export function useEncounterData() {
   const error = ref<string | null>(null)
   const isLoading = ref(false)
   const sortedCharacters = ref<any>([])
-  const sortedNpcs = ref<any>([])
 
   socket?.appContext.config.globalProperties.$onSocketEvent('initiativeUpdated', (data: EncounterData) => {
       console.log(data)
@@ -39,12 +38,6 @@ export function useEncounterData() {
           return
         }
 
-        console.log('Initiative Order:', initiativeOrder)
-        console.log(
-          'Character Names:',
-          encounter.characters.map((char) => char.name)
-        )
-
         const allEntities = [...encounter.characters, ...encounter.npcs]
 
         const sortedEntities = allEntities
@@ -56,6 +49,8 @@ export function useEncounterData() {
           })
 
         sortedCharacters.value = sortedEntities
+
+        encounterStore.setCharacterOrder(sortedCharacters.value)
       } catch (error) {
         console.error('Error parsing initiative_order:', error)
       }
@@ -114,8 +109,6 @@ export function useEncounterData() {
     form,
     getFaction,
     rotateEntities,
-    sortCards,
-    sortedCharacters,
-    sortedNpcs
+    sortCards
   }
 }

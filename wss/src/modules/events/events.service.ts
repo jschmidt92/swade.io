@@ -6,15 +6,15 @@ export class EventsService {
   constructor(private readonly io: Server) {}
 
   handleAttendanceUpdate(socket: string, data: Attendance): void {
-    console.log(`Attendance update from client ${socket}:`, data)
+    // console.log(`Attendance update from client ${socket}:`, data)
     this.io.emit('attendanceUpdated', data)
   }
   handleInitiativeUpdate(data: Initiative): void {
-    console.log(`Initiative updated:`, data)
+    // console.log(`Initiative updated:`, data)
     this.io.emit('initiativeUpdated', data)
   }
   handleInitiativeNextTurn(): void {
-    console.log("Next player's turn")
+    // console.log("Next player's turn")
     this.io.emit('nextPlayerTurn')
   }
 }
