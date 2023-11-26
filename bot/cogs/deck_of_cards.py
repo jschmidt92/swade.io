@@ -131,7 +131,7 @@ class deck_of_cards(commands.Cog):
         self.deck = Deck()
         self.current_turn = 0
         self.initiative_order = []
-        self.websocket_client = WebSocketClient("https://135.135.196.140:3000")
+        self.websocket_client = WebSocketClient("https://websocket.innovativedevsolutions.org")
 
     async def cog_check(self, ctx):
         return (
