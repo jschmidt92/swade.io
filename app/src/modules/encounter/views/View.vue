@@ -7,8 +7,7 @@ import { useEncounterStore } from '../encounter.store'
 import { useEncounterData } from '../encounter.utils'
 
 const props = defineProps({ id: String })
-const webhook =
-  'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
+const webhook = 'https://discord.com/api/webhooks/1129538520214683739/bYEVm_ar3DwJCqKrWn_pcvbTZleCXxZShbBghL6nkmRajbXiAfmoZljU3R5_silFtAcC'
 const encounterStore = useEncounterStore()
 
 const { getFaction, sortedCharacters, sortedNpcs } = useEncounterData()
@@ -46,18 +45,14 @@ onMounted(async () => {
         <div class="row">
           <div class="col-md-12 mb-4">
             <div class="card shadow-sm mb-3">
-              <div
-                class="card-header card-title text-uppercase bg-dark-subtle mb-1"
-              >
+              <div class="card-header card-title text-uppercase bg-dark-subtle mb-1">
                 Initiative List
               </div>
               <div class="card-body">
                 <div class="d-flex justify-content-start align-items-center">
                   <span class="me-2">Key:</span>
                   <div>
-                    <span class="bg-secondary border-secondary p-1"
-                      >Unknown</span
-                    >
+                    <span class="bg-secondary border-secondary p-1">Unknown</span>
                     <span class="bg-danger border-danger p-1">Enemy</span>
                     <span class="bg-warning border-warning p-1">Neutral</span>
                     <span class="bg-success border-success p-1">Friendly</span>
@@ -69,35 +64,21 @@ onMounted(async () => {
           </div>
           <div class="col-md-6">
             <div class="card shadow-sm mb-3">
-              <div
-                class="card-header card-title text-uppercase bg-dark-subtle border-0"
-              >
+              <div class="card-header card-title text-uppercase bg-dark-subtle border-0">
                 In Combat
               </div>
             </div>
-            <template
-              v-for="entity in combinedEntities"
-              :key="entity.name"
-            >
+            <template v-for="entity in combinedEntities" :key="entity.name">
               <BaseEntityCard
                 :name="entity.name"
                 :class="entity.type === 'character' ? 'bg-info' : getFaction(entity.faction)"
                 :damage="entity.damage"
               />
             </template>
-            <!-- <template v-for="npc in sortedNpcs" :key="npc.name">
-              <BaseEntityCard
-                :name="npc.name"
-                :class="getFaction(npc.faction)"
-                :damage="npc.damage"
-              />
-            </template> -->
           </div>
           <div class="col-md-6">
             <div class="card shadow-sm mb-3">
-              <div
-                class="card-header card-title text-uppercase bg-dark-subtle border-0"
-              >
+              <div class="card-header card-title text-uppercase bg-dark-subtle border-0">
                 Out Of Combat
               </div>
             </div>

@@ -16,15 +16,13 @@ export function useEncounterData() {
   const sortedCharacters = ref<any>([])
   const sortedNpcs = ref<any>([])
 
-  socket?.appContext.config.globalProperties.$onSocketEvent(
-    'initiativeUpdateHandled',
-    (data: EncounterData) => {
+  socket?.appContext.config.globalProperties.$onSocketEvent('initiativeUpdated', (data: EncounterData) => {
       console.log(data)
       sortCards(data)
     }
   )
 
-  socket?.appContext.config.globalProperties.$onSocketEvent('initiativeTurnHandled', () => {
+  socket?.appContext.config.globalProperties.$onSocketEvent('nextPlayerTurn', () => {
       rotateEntities()
     }
   )

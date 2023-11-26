@@ -9,10 +9,7 @@ export const useEventData = () => {
   const eventStore = useEventStore()
   const events = ref<Event[]>([])
 
-  socket?.appContext.config.globalProperties.$onSocketEvent(
-    'attendanceUpdateHandled',
-    (message: string) => {
-      console.log(message)
+  socket?.appContext.config.globalProperties.$onSocketEvent('attendanceUpdated', () => {
       refreshEvents()
     }
   )
@@ -28,15 +25,13 @@ export const useEventData = () => {
     })
 
     const event = await eventStore.getEventById(event_id)
-    const eventData = {
-      event_id: event?.title,
+    const data = {
+      event_title: event?.title,
       discord_id: authStore.discord_id,
       status: attendance
     }
-    socket?.appContext.config.globalProperties.$emitSocketEvent(
-      'attendanceUpdate',
-      eventData
-    )
+
+    socket?.appContext.config.globalProperties.$emitSocketEvent('attendanceUpdate', data)
   }
 
   const refreshEvents = async () => {

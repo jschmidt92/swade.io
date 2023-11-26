@@ -11,6 +11,7 @@ lerna-debug.log*
 .vscode
 __pycache__
 node_modules
+certs
 certificates
 dist
 dist-ssr

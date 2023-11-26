@@ -119,7 +119,7 @@ class WebSocketClient:
 
         print(f"Encounter ID: {encounter_id}, Initiative Order: {initiative_order}")
 
-        await self.sio.emit("initiativeDealt", data)
+        await self.sio.emit("initiativeUpdate", data)
 
     async def initiative_turn(self):
         await self.sio.emit("initiativeNextTurn")
