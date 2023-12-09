@@ -1,7 +1,7 @@
-from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
+from django.http import HttpRequest, Http404, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from dotenv import load_dotenv
 from .models import DiscordUser
 import os

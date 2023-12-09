@@ -4,6 +4,7 @@ import { EventsModule } from './modules/events/events.module'
 import { MessagesModule } from './modules/messages/messages.module'
 import dotenv from 'dotenv'
 import fs from 'fs'
+import { GamesModule } from './modules/games/games.module'
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ const io = new Server(httpsServer, {
 
 new EventsModule(io)
 new MessagesModule(io)
+new GamesModule(io)
 
 io.on('connection', (socket: Socket) => {
   console.log(`Client connected: ${socket.id}`)

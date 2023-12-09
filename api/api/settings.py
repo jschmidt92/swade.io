@@ -40,6 +40,8 @@ ALLOWED_HOSTS = [
     'swadeio.innovativedevsolutions.org'
 ]
 
+ALLOWED_REDIRECT_HOSTS = ['swapp']
+
 AUTHENTICATION_BACKENDS = [
     'discordlogin.auth.DiscordAuthenticationBackend',
 ]

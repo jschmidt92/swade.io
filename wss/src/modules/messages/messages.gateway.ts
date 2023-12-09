@@ -1,5 +1,6 @@
 import { Server, Socket } from 'socket.io'
 import { MessagesService } from './messages.service'
+import { CreateMessageDto } from './dtos/message.dto'
 
 export class MessagesGateway {
   private readonly messagesService: MessagesService
@@ -10,6 +11,18 @@ export class MessagesGateway {
   }
 
   private handleMessages() {
-    this.io.on('connection', (socket: Socket) => {})
+    this.io.on('connection', (socket: Socket) => {
+      socket.on('createMessage', async (createMessageDto: CreateMessageDto) => {
+        const message = await this.messagesService.create(createMessageDto)
+        this.io.emit('message', message)
+        return message
+      })
+      socket.on('findAllMessages', () => {
+        return this.messagesService.findAll()
+      })
+      socket.on('isTyping', async (isTyping: boolean) => {
+        socket.broadcast.emit('typing', { isTyping })
+      })
+    })
   }
 }

@@ -2,7 +2,7 @@ FROM node:alpine
 
 WORKDIR /app
 
-# VOLUME /swadeIOWSS
+# VOLUME /swadeIOPeer
 
 RUN apk add --update --no-cache bash gcc libffi-dev musl-dev openssl-dev
 
